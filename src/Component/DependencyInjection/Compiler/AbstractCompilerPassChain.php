@@ -18,8 +18,8 @@ use Scribe\Wonka\Utility\Mapper\ParametersToPropertiesMapperTrait;
  */
 abstract class AbstractCompilerPassChain implements CompilerPassChainInterface
 {
-    use ParametersToPropertiesMapperTrait,
-        CompilerPassChainTrait;
+    use ParametersToPropertiesMapperTrait;
+    use CompilerPassChainTrait;
 
     /**
      * Construct object with default parameters. Any number of parameters may be passed so long as they are each a

@@ -49,8 +49,6 @@ class KernelTestCase extends BaseKernelTestCase
     public function tearDown()
     {
         parent::tearDown();
-
-
     }
 
     public function clearKernelCache()

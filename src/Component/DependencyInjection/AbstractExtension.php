@@ -46,7 +46,7 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
      *
      * @var string
      */
-    private $indexPrefix = 'scribe';
+    private $indexPrefix = 'abc';
 
     /**
      * Index parts separator.
@@ -194,7 +194,7 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
 
         $processedConfigSet = $this->processConfiguration($configuration, $configSet);
 
-        return $this->processConfigsToParameters($processedConfigSet, null, true);
+        return $this->processConfigsToParameters($processedConfigSet, null, false);
     }
 
     /**
@@ -273,10 +273,10 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
      *
      * @return $this
      */
-    protected function processConfigsToParameters(array $configSet = [], $currentId = null, $parseEmptyValueSet = false)
+    protected function processConfigsToParameters(array $configSet = [], $currentId = null, $parseEmptyValueSet = true)
     {
         if (true === (count($configSet) === 0)) {
-            return $parseEmptyValueSet ? $this->handleConfigsToParameterWhenEmpty($currentId, $configSet) : $this;
+            return ($parseEmptyValueSet === true ? $this->handleConfigsToParameterWhenEmpty($currentId, $configSet) : $this);
         }
 
         foreach ($configSet as $id => $value) {
@@ -284,10 +284,9 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
 
             if (true === is_array($value)) {
                 $this->handleConfigsToParameterWhenArray($newId, $currentId, $id, $value);
-                continue;
+            } else {
+                $this->handleConfigsToParameterWhenNotArray($newId, $value);
             }
-
-            $this->handleConfigsToParameterWhenNotArray($newId, $value);
         }
 
         return $this;
@@ -409,7 +408,8 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
     private function buildConfigParameterIndex(...$indexPartSet)
     {
         return (string) $this->normalizeConfigParameterIndex(
-            $this->getIndexPrefix().$this->getIndexSeparator().implode($this->getIndexSeparator(), $indexPartSet));
+            $this->getIndexPrefix().$this->indexSeparator.implode($this->indexSeparator, (array) $indexPartSet)
+        );
     }
 
     /**
@@ -425,17 +425,20 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
      */
     private function normalizeConfigParameterIndex($resolvedIndexValue)
     {
+        $validFirstChar   = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $regexDeliminator = preg_quote($this->indexSeparator, '#');
+
         $normalizationRegexSet = [
-            '#\.+#'            => '',
-            '#[^a-z0-9\._-]#i' => '',
+            '#'.$regexDeliminator.'+#'            => $this->indexSeparator,
+            '#[^a-z0-9'.$regexDeliminator.'_-]#i' => '',
         ];
 
         foreach ($normalizationRegexSet as $regex => $replace) {
             $resolvedIndexValue = (string) preg_replace($regex, $replace, $resolvedIndexValue);
         }
 
-        if (false === stripos('ABCDEFGHIJKLMNOPQRSTUVWXYZ', $resolvedIndexValue[0])) {
-            throw new RuntimeException('Dependency injection parameter indexes must begin with a letter, the index %s is invalid.', null, null, $resolvedIndexValue);
+        if (false === stripos($validFirstChar, $resolvedIndexValue[0])) {
+            throw new RuntimeException('DI-auto config->parameter ids must begin with a letter: the index "%s" is invalid.', null, null, $resolvedIndexValue);
         }
 
         return (string) $resolvedIndexValue;

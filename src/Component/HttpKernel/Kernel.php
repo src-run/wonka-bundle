@@ -22,7 +22,14 @@ class Kernel extends BaseKernel
     /**
      * @var array[string]
      */
-    protected $enviornmentBundles = ['all' => []];
+    protected $envBundles;
+
+    public function clear()
+    {
+        $this->envBundles = ['all' => []];
+
+        return $this;
+    }
 
     /**
      * @return void
@@ -37,24 +44,24 @@ class Kernel extends BaseKernel
      *
      * @return $this
      */
-    protected function addBundle($absoluteName, ...$enviornmentSet)
+    protected function addBundle($absoluteName, ...$envSet)
     {
-        if (true === is_iterable_empty($enviornmentSet)) {
-            $this->enviornmentBundles['all'][] = $absoluteName;
+        if (true === is_iterable_empty($envSet)) {
+            $this->envBundles['all'][] = $absoluteName;
 
             return $this;
         }
 
-        foreach ($enviornmentSet as $enviornment) {
-            if (false === array_key_exists($enviornment, $this->enviornmentBundles)) {
-                $this->enviornmentBundles[(string) $enviornment] = [];
+        foreach ($envSet as $env) {
+            if (false === array_key_exists($env, $this->envBundles)) {
+                $this->envBundles[(string) $env] = [];
             }
 
             if (substr($absoluteName, 0, 1) !== '\\') {
                 $absoluteName = '\\' . $absoluteName;
             }
 
-            $this->enviornmentBundles[(string) $enviornment][] = $absoluteName;
+            $this->envBundles[(string) $env][] = $absoluteName;
         }
 
         return $this;
@@ -65,10 +72,10 @@ class Kernel extends BaseKernel
      */
     protected function resolveBundles()
     {
-        if (array_key_exists($this->getEnvironment(), $this->enviornmentBundles)) {
-            $bundleSetUnresolved = array_merge($this->enviornmentBundles['all'], $this->enviornmentBundles[$this->getEnvironment()]);
-        } else {
-            $bundleSetUnresolved = $this->enviornmentBundles['all'];
+        $bundleSetUnresolved = array_unique($this->envBundles['all']);
+
+        if (array_key_exists($this->getEnvironment(), $this->envBundles) && $this->getEnvironment() !== 'prod') {
+            $bundleSetUnresolved = array_unique(array_merge($bundleSetUnresolved, $this->envBundles[$this->getEnvironment()]));
         }
 
         $bundleSetResolved = [];
@@ -85,7 +92,7 @@ class Kernel extends BaseKernel
      */
     final public function registerBundles()
     {
-        $this->setup();
+        $this->clear()->setup();
 
         return $this->resolveBundles();
     }

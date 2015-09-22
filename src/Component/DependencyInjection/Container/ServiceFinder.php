@@ -48,8 +48,7 @@ class ServiceFinder
             return $this->container->get($service);
         }
 
-        throw new RuntimeException('Service %s not found by %s finder service.',
-            null, null, $service, get_called_class());
+        throw new RuntimeException('Service %s not found by %s finder service.', null, null, $service, get_called_class());
     }
 }
 
