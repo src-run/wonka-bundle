@@ -23,9 +23,9 @@ class CompilerPassInvalidHandlerFixture extends AbstractCompilerPass
      *
      * @return string
      */
-    protected function getChainServiceName()
+    protected function getChainSrvName()
     {
-        return 's.mantle.node_creator.renderer.registrar';
+        return 'invalid.chain.service.id';
     }
 
     /**
@@ -33,7 +33,7 @@ class CompilerPassInvalidHandlerFixture extends AbstractCompilerPass
      *
      * @return string
      */
-    protected function getHandlerTagName()
+    protected function getChainTagName()
     {
         return 'bad-tag-name';
     }

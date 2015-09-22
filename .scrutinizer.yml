@@ -68,5 +68,3 @@ checks:
             order_alphabetically: false
         avoid_unnecessary_concatenation: true
         avoid_perl_style_comments: true
-
-...
