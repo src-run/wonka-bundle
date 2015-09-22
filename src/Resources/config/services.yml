@@ -1,0 +1,26 @@
+---
+
+parameters:
+
+    s.wonka.utility.logger_callable.class:     Scribe\Wonka\Utility\Logger\LoggerCallable
+    s.wonka.utility.reflection_analyser.class: Scribe\Wonka\Utility\Reflection\ClassReflectionAnalyser
+    s.wonka.utility.service_finder.class:      Scribe\WonkaBundle\Component\DependencyInjection\Container\ServiceFinder
+
+services:
+
+    s.wonka.utility.reflection_analyser:
+        class : %s.wonka.utility.reflection_analyser.class%
+        calls :
+            - [unsetReflectionClass]
+
+    s.wonka.utility.logger_callable:
+        class     : %s.wonka.utility.logger_callable.class%
+        arguments :
+            - @logger
+
+    s.wonka.utility.service_finder:
+        class     : %s.wonka.utility.service_finder.class%
+        arguments :
+            - @service_container
+
+...

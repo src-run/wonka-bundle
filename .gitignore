@@ -1,0 +1,6 @@
+/vendor/
+/docs/_build/
+/.idea/
+atlassian-ide-plugin.xml
+*.DS_Store*
+*.rb
