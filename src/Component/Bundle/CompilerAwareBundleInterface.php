@@ -9,14 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Scribe\WonkaBundle\DependencyInjection\Compiler;
+namespace Scribe\WonkaBundle\Component\Bundle;
 
 /**
- * Class AbstractCompilerPass.
+ * Class CompilerAwareBundleInterface
  */
-interface CompilerPassInterface
+interface CompilerAwareBundleInterface
 {
-    const CHAIN_ADD_METHOD_NAME = 'addHandler';
+    /**
+     * @return string[]
+     */
+    public function getCompilerPassInstances();
 }
 
 /* EOF */

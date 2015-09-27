@@ -13,6 +13,7 @@ namespace Scribe\WonkaBundle\Component\DependencyInjection\Builder;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 
 /**
  * Class Builder.
@@ -56,7 +57,7 @@ class Builder
     }
 
     /**
-     * @return NodeDefinition
+     * @return NodeDefinition|ArrayNodeDefinition
      */
     public function getNodeBuilder()
     {
