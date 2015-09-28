@@ -36,10 +36,11 @@ interface CompilerRegistrarInterface extends \IteratorAggregate, \Countable
     /**
      * @param CompilerAttendantInterface $attendant
      * @param null|int                   $priority
+     * @param array                      $extra
      *
      * @return $this
      */
-    public function addAttendant(CompilerAttendantInterface $attendant, $priority = null);
+    public function addAttendant(CompilerAttendantInterface $attendant, $priority = null, $extra = []);
 
     /**
      * @param CompilerAttendantInterface $attendant
