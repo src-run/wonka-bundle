@@ -14,12 +14,12 @@ namespace Scribe\WonkaBundle\Component\DependencyInjection\Loader;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\FileLoader;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader as SymfonyYamlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader as BaseYamlFileLoader;
 
 /**
  * Class YamlFileLoader.
  */
-class YamlFileLoader extends SymfonyYamlFileLoader
+class YamlFileLoader extends BaseYamlFileLoader
 {
     /**
      * Overwrite the default constructor behaviour to do nothing, so we can defer

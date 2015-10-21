@@ -14,7 +14,7 @@ namespace Scribe\WonkaBundle\Utility\Locator;
 use Symfony\Component\Finder\Finder;
 
 /**
- * AbstractDoctrineYamlFixture.
+ * OrderedYamlDoctrineFixture.
  */
 class PathLocator
 {
