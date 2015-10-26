@@ -16,7 +16,7 @@ notifications:
         secure: fQJkH85f60YbHu0y3y7lptnouX3IULkX9f8wrEq4+SFI7n7Uy6RLRhz1wRioOR0gjRcX4dH+40ZZit3GpLB0M781cOwuBAcnobrU6coE8YdbFLrK/EFD/qXM/6RlwRik/3TA3ZX5C1WQfrBxnxq3jvuTFDplrXoxThS3lIl/KCo=
 
 before_install:
-    - git submodule init && git submodule update
+    - git submodule init && git submodule update && cd app/config/shared_public/ && git checkout -b aboriginal-pasta origin/aboriginal-pasta && git pull
     - sh app/config/shared_public/build/php_build-mod_igbinary.sh
     - sh app/config/shared_public/build/php_build-mod_twig.sh
     - phpenv config-add app/config/shared_public/build/php_config-en_timezone.ini
