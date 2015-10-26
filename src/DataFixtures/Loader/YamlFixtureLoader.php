@@ -10,12 +10,12 @@
  */
 
 namespace Scribe\WonkaBundle\DataFixtures\Loader;
+
 use Scribe\Wonka\Exception\RuntimeException;
-use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * YamltFixtureLoader.
+ * Class YamlFixtureLoader.
  */
 class YamlFixtureLoader extends AbstractFixtureLoader
 {
@@ -41,10 +41,42 @@ class YamlFixtureLoader extends AbstractFixtureLoader
     public function load($resource, $type = null)
     {
         try {
+
             $contents = $this->loadFileContents($resource);
-            $decoded  = Yaml::parse($contents, true, true, false);
+            $decoded = $this->loadUsingSymfonyYaml($contents);
+
         } catch (\Exception $exception) {
             throw new RuntimeException('Could not decode YAML for %s.', null, $exception, $resource);
+        }
+
+        return $decoded;
+    }
+
+    /**
+     * @param string $contents
+     *
+     * @throws \RuntimeException
+     *
+     * @return array
+     */
+    protected function loadUsingLibYaml($contents)
+    {
+        if (false === ($decoded = yaml_parse($contents, -1))) {
+            throw new \RuntimeException('Could not decode YAML using libyaml "yaml_parse" function.');
+        }
+
+        return $decoded;
+    }
+
+    /**
+     * @param string $contents
+     *
+     * @return array
+     */
+    protected function loadUsingSymfonyYaml($contents)
+    {
+        if (false === ($decoded = Yaml::parse($contents, true, true, true))) {
+            throw new \RuntimeException('Could not decode YAML using Symfony "Yaml::parse" function.');
         }
 
         return $decoded;

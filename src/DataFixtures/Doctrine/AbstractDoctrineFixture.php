@@ -16,7 +16,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\ObjectManager;
 use Scribe\MantleBundle\Doctrine\Base\Entity\AbstractEntity;
 use Scribe\MantleBundle\Doctrine\Exception\ORMException;
-use Scribe\Wonka\Exception\ExceptionInterface;
 use Scribe\Wonka\Exception\RuntimeException;
 use Scribe\Wonka\Utility\Reflection\ClassReflectionAnalyser;
 use Scribe\WonkaBundle\Component\DependencyInjection\Container\ContainerAwareTrait;
@@ -140,7 +139,7 @@ abstract class AbstractDoctrineFixture extends AbstractFixture implements Doctri
                 ->load($this, $locator, $resolver);
 
         } catch (\Exception $exception) {
-            throw new RuntimeException('Unable to generate metadata for fixture.', null, $exception);
+            throw new RuntimeException('Unable to generate metadata for fixture (ORM Loader: %s)', null, $exception, get_class($this));
         }
     }
 
@@ -156,6 +155,7 @@ abstract class AbstractDoctrineFixture extends AbstractFixture implements Doctri
             $entity = $this->getNewPopulatedEntity($index, $data);
 
             $manager->persist($entity);
+
             if ($this->m->isCannibal()) { $manager->flush(); }
 
             if ($this->m->hasReferenceByIndexEnabled()) {
@@ -163,11 +163,15 @@ abstract class AbstractDoctrineFixture extends AbstractFixture implements Doctri
             }
 
             if ($this->m->hasReferenceByColumnsEnabled()) {
-                $referenceByColumnsSetConcat   = function($columns) { return implode(':', (array) $columns); };
+
+                $referenceByColumnsSetConcat = function($columns) use ($data) {
+                    array_walk($columns, function (&$c) use ($data) { $c = $data[$c]; });
+                   return implode(':', (array) $columns);
+                };
                 $referenceByColumnsSetRegister = function($columns) use ($entity, $referenceByColumnsSetConcat) {
                     $this->addReference($this->m->getName().':'.$referenceByColumnsSetConcat($columns), $entity);
                 };
-                array_walk($this->m->getReferenceByColumnsSets(), $referenceByColumnsSetRegister);
+                array_map($referenceByColumnsSetRegister, $this->m->getReferenceByColumnsSets());
             }
 
             if (($index % $this->batch) === 0) {
@@ -182,14 +186,15 @@ abstract class AbstractDoctrineFixture extends AbstractFixture implements Doctri
 
     /**
      * @param int     $index
-     * @param mixed[] $values
+     * @param array[] $values
      *
      * @return mixed
      */
     protected function getNewPopulatedEntity($index, $values)
     {
         try {
-            $entity = $this->getContainerService($this->m->getServiceKey());
+            $entityClassName = $this->getContainerParameter($this->m->getServiceKey());
+            $entity = new $entityClassName();
         } catch (\Exception $exception) {
             throw new RuntimeException('Unable to locate service id %s.', null, $exception, $this->m->getServiceKey());
         }
@@ -197,76 +202,71 @@ abstract class AbstractDoctrineFixture extends AbstractFixture implements Doctri
         try {
             return $this->hydrateEntity($entity, $index, $values);
         } catch (\Exception $exception) {
-            throw new RuntimeException('Could not hydrate entity: fixture %s, index %n.', null, $exception, $this->m->getName(), $index);
+            throw new RuntimeException('Could not hydrate entity: fixture %s, index %s.', null, $exception, $this->m->getName(), (string) $index);
         }
     }
 
     /**
      * @param AbstractEntity $entity
-     * @param string         $index
+     * @param int            $index
      * @param array[]        $values
      *
      * @return mixed
      */
     protected function hydrateEntity(AbstractEntity $entity, $index, $values)
     {
-        foreach ($values as $key => $val) {
-            $call = $this->getHydrateEntityMethodCall($key);
-            $data = $this->getHydrateEntityMethodData($key, $val);
+        foreach ($values as $property => $value) {
+            $methodCall = $this->getHydrateEntityMethodCall($property);
+            $methodData = $this->getHydrateEntityMethodData($property, $values);
 
             try {
-                $this->hydrateEntityData($entity, $key, $call, $data);
+                $entity = $this->hydrateEntityData($entity, $property, $methodCall, $methodData);
             } catch(\Exception $exception) {
-                $this->hydrateEntityData($entity, $key, $call, new ArrayCollection((array) $data));
+                $entity = $this->hydrateEntityData($entity, $property, $methodCall, new ArrayCollection((array) $methodData));
             }
         }
 
         return $entity;
     }
 
-    protected function hydrateEntityData(AbstractEntity $entity, $key, $call, $data)
+    protected function hydrateEntityData(AbstractEntity $entity, $property, $methodCall, $methodData)
     {
-        if (method_exists($entity, $call)) {
-            call_user_func([$entity, $call], $data);
-
-            return;
-        }
-
         try {
 
-            $reflectProp = (new ClassReflectionAnalyser($entity))
-                ->setPropertyPublic($key);
+            $reflectProp = (new ClassReflectionAnalyser(new \ReflectionClass($entity)))
+                ->setPropertyPublic($property);
+            $reflectProp->setValue($entity, $methodData);
 
-            $reflectProp->setValue($entity, $data);
+            return $entity;
 
         } catch (\Exception $exception) {
-            throw new RuntimeException('Could not assign property %s via setter or reflection in fixture %s.', null, $exception, $key, $this->m->getName());
+            throw new RuntimeException('Could not assign property "%s" via property, setter or reflection in fixture %s.', null, $exception, $property, $this->m->getName());
         }
     }
 
     /**
-     * @param string $key
+     * @param string $property
      *
      * @return string
      */
-    protected function getHydrateEntityMethodCall($key)
+    protected function getHydrateEntityMethodCall($property)
     {
-        return (string) sprintf('set%s', ucfirst($key));
+        return (string) sprintf('set%s', ucfirst($property));
     }
 
     /**
-     * @param string     $key
+     * @param string     $property
      * @param array|null $values
      *
      * @return array|mixed
      */
-    protected function getHydrateEntityMethodData($key, array $values = null)
+    protected function getHydrateEntityMethodData($property, array $values = null)
     {
-        if (!array_key_exists($key, $values)) {
-            throw new RuntimeException('Could not find index %s in fixture %s.', null, null, $key, $this->m->getName());
+        if (!array_key_exists($property, $values)) {
+            throw new RuntimeException('Could not find index %s in fixture %s.', null, null, $property, $this->m->getName());
         }
 
-        return is_array($values[$key]) ? $this->getHydrationValueSet($values[$key]) : $this->getHydrationValue($values[$key]);
+        return is_array($values[$property]) ? $this->getHydrationValueSet($values[$property]) : $this->getHydrationValue($values[$property]);
     }
 
     /**
@@ -287,15 +287,11 @@ abstract class AbstractDoctrineFixture extends AbstractFixture implements Doctri
     protected function getHydrationValue($value)
     {
         if (substr($value, 0, 2) === '++') {
-            return $this->getHydrationValueUsingInternalRefLookup(substr($value, 2)) ?: $value;
-        }
-
-        if (substr($value, 0, 1) === '+' && 1 === preg_match('{^\+([a-z]+:[0-9]+)$}i', $value, $matches)) {
-            return $this->getHydrationValueUsingInternalRefLookup($matches[1]) ?: $value;
-        }
-
-        if (substr($value, 0, 1) === '@' && 1 === preg_match('{^@([a-z]+)\?([^=]+)=([^&]+)$}i', $value, $matches)) {
-            return $this->getHydrationValueUsingSearchQuery($matches[1], $matches[2], $matches[3]) ?: $value;
+            $value = $this->getHydrationValueUsingInternalRefLookup(substr($value, 2)) ?: $value;
+        } elseif (substr($value, 0, 1) === '+' && 1 === preg_match('{^\+([a-z]+:[0-9]+)$}i', $value, $matches)) {
+            $value = $this->getHydrationValueUsingInternalRefLookup($matches[1]) ?: $value;
+        } elseif (substr($value, 0, 1) === '@' && 1 === preg_match('{^@([a-z]+)\?([^=]+)=([^&]+)$}i', $value, $matches)) {
+            $value = $this->getHydrationValueUsingSearchQuery($matches[1], $matches[2], $matches[3]) ?: $value;
         }
 
         return $value;
@@ -339,7 +335,7 @@ abstract class AbstractDoctrineFixture extends AbstractFixture implements Doctri
             throw new ORMException('Error searching with call %s(%s) in fixture %s.', null, $exception, $call, $criteria, $this->m->getName());
         }
 
-        if (count($result) > 0) {
+        if (count($result) > 1) {
             throw new ORMException('Search with call %s(%s) in fixture %s has >1 result.', null, null, $call, $criteria, $this->m->getName());
         }
 

@@ -16,72 +16,83 @@ use Scribe\WonkaBundle\Utility\TestCase\WonkaTestCase;
 
 class SecurityTest extends WonkaTestCase
 {
-    public function testGenerateRandom()
+    public function testRandomPassword()
     {
-        $random = Security::generateRandom(100, true);
-
-        static::assertEquals(
-            strlen('aXyuvDR2yicN+vk0j0twYA6CeWKq+98qP8jlCjzgZ8sfI0td/8Lqph8c2c2XZpGBHNxbPreqHllDCRXuMqzlAKrhqfOc5LeW0pAAzGgKq4EYz7d5lk050XSoTrw247+8wsFI3g=='),
-            strlen($random)
-        );
+        static::assertTrue(Security::isSecurePassword(Security::getRandomPassword(10)));
+        static::assertEquals(8, Security::isSecurePassword(Security::getRandomPassword(8)));
+        static::assertEquals(100, Security::isSecurePassword(Security::getRandomPassword(100)));
     }
 
-    public function testGenerateRandomLimit()
+    public function testRandomPasswordExceptionTooShort()
     {
-        $random = Security::generateRandom(100, true, '#[A-Z0-9]#');
-        $randomManualRegex = preg_replace('#[A-Z0-9]#', '', $random, -1, $count);
-
-        static::assertEquals($random, $randomManualRegex);
-        static::assertEquals(0, $count);
+        $this->setExpectedException('Scribe\Wonka\Exception\RuntimeException');
+        Security::getRandomPassword(7);
     }
 
-    public function testGenerateRandomHash()
+    public function testIsSecurePassword()
     {
-        $hash = Security::generateRandomHash();
+        $passwords = [
+            'to',
+            'short',
+            'contemplation',
+            'thisIsBe@#77erAn3ShouldPa33',
+            'thisPa33e3CrackLibButDoesNotMeetRegex'
+        ];
 
-        static::assertEquals(
-            strlen('4d046472d4374c0f58a14c737d981e06bad93d43fb0ae06e82a9ce93d6bde0b45304034a3640bd526a8dc3e0999830d3a0f69c49a369becb71f87f60b53152bd'),
-            strlen($hash)
-        );
+        $expected = [
+            false,
+            false,
+            false,
+            true,
+            false
+        ];
 
-        $hash = Security::generateRandomHash('md5', false, 10000);
-
-        static::assertEquals(
-            strlen('199b3a1440496a989dfe818b73136ece'),
-            strlen($hash)
-        );
+        for ($i = 0; $i < count($passwords); $i++) {
+            static::assertEquals($expected[$i], Security::isSecurePassword($passwords[$i]));
+        }
     }
 
-    public function testDoesPasswordMeetRequirements()
+    public function testIsSecurePasswordException()
     {
-        static::assertFalse(Security::doesPasswordMeetRequirements('abc'));
-        static::assertTrue(Security::doesPasswordMeetRequirements('abcdEFGH!@#*0124ijklMNOP^%&)5678'));
-        static::assertTrue(Security::doesPasswordMeetRequirements('a1', '#.*^(?=.{2,})(?=.*[a-z])(?=.*[0-9]).*$#'));
-        static::assertFalse(Security::doesPasswordMeetRequirements('ab', '#.*^(?=.{2,})(?=.*[a-z])(?=.*[0-9]).*$#'));
+        $this->setExpectedException('Scribe\Wonka\Exception\RuntimeException');
+        Security::isSecurePassword('nope', '', true);
     }
 
-    public function testGenerateRandomPassword()
+    public function testRandomBytes()
     {
-        $passwordShort = Security::generateRandomPassword(8);
+        $random = [];
 
-        static::assertEquals(
-            8,
-            strlen($passwordShort)
-        );
+        for ($i = 0; $i < 10000; $i++) {
+            $random[] = Security::getRandomBytes(10, true);
+            static::assertEquals(10, strlen($random[$i]));
+        }
 
-        $passwordLong = Security::generateRandomPassword(1000);
+        for ($i = 0; $i < 10000; $i++) {
+            $randomValue = $random[$i];
+            unset($random[$i]);
+            static::assertFalse(in_array($randomValue, $random));
+        }
 
-        static::assertEquals(
-            1000,
-            strlen($passwordLong)
-        );
+        $random = [];
 
-        $this->setExpectedException(
-            'Scribe\Wonka\Exception\RuntimeException',
-            'Reached loop count trying to create random password in "Scribe\WonkaBundle\Utility\Security\Security::generateRandomPassword". Lower requirements.'
-        );
+        for ($i = 0; $i < 10000; $i++) {
+            $random[] = Security::getRandomBytes(10, false, function($string) {
+                return str_replace('a', '', $string);
+            });
+            static::assertFalse(strpos($random[$i], 'a'));
+        }
 
-        $passwordImpossible = Security::generateRandomPassword(1);
+        for ($i = 1; $i < 10000; $i++) {
+            static::assertEquals($i, strlen(Security::getRandomBytes($i, true)));
+            static::assertEquals($i*2, strlen(Security::getRandomBytes($i, false)));
+        }
+    }
+
+    public function testRandomBytesExceptionInvalidLength()
+    {
+        $this->setExpectedException('Scribe\Wonka\Exception\RuntimeException');
+
+        Security::getRandomBytes(0);
     }
 }
 

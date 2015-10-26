@@ -23,7 +23,7 @@
     ],
     "require" : {
         "php"                  : ">=5.6.4,~5.6|~7.0",
-        "scribe/wonka-library" : "~0.1",
+        "scribe/wonka-library" : "~0.1@dev",
         "symfony/config"       : "~2.8"
     },
     "require-dev" : {
@@ -60,10 +60,10 @@
             "Scribe\\WonkaBundle\\" : "src/"
         }
     },
+    "minimum-stability" : "dev",
     "config" : {
         "bin-dir"           : "bin",
-        "preferred-install" : "auto",
-        "minimum-stability" : "dev"
+        "preferred-install" : "auto"
     },
     "extra": {
         "branch-alias": {

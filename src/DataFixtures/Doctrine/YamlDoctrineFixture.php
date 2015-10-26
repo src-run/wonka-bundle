@@ -11,9 +11,7 @@
 
 namespace Scribe\WonkaBundle\DataFixtures\Doctrine;
 
-use Scribe\Wonka\Exception\RuntimeException;
 use Scribe\WonkaBundle\DataFixtures\Loader\FixtureLoaderInterface;
-use Scribe\WonkaBundle\DataFixtures\Loader\YamlFixtureLoader;
 
 /**
  * YamlDoctrineFixture.

@@ -12,7 +12,7 @@
 namespace Scribe\WonkaBundle\Utility\Security;
 
 use Scribe\Wonka\Exception\RuntimeException;
-use Symfony\Component\Security\Core\Util\SecureRandom;
+use Scribe\Wonka\Utility\Error\DeprecationErrorHandler;
 
 /**
  * Class Security.
@@ -20,6 +20,135 @@ use Symfony\Component\Security\Core\Util\SecureRandom;
 class Security
 {
     /**
+     * @var string
+     */
+    const PASSWORD_SECURE_REGEX = '{.*^(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$}';
+
+    /**
+     * @var string
+     */
+    const PASSWORD_CRACK_DICT = '/var/cache/cracklib/cracklib_dict';
+
+    /**
+     * @param int           $length
+     * @param bool|false    $raw
+     * @param \Closure|null $filter
+     *
+     * @return string
+     */
+    public static function getRandomBytes($length = 100, $raw = false, \Closure $filter = null)
+    {
+        if ($length < 1) {
+            throw new RuntimeException('%s: Cannot generate random bytes of less than 1.', null, null, __METHOD__);
+        }
+
+        $iteration = 0;
+        $iterationLimit = $length * 2;
+
+        do {
+            $randomBytes = openssl_random_pseudo_bytes($length, $isCryptographicallyStrong);
+            $iteration++;
+        } while (true !== $isCryptographicallyStrong && $iteration < $iterationLimit);
+
+        if (false === $randomBytes) {
+            throw new RuntimeException('%s: PHP must be compiled with OpenSSL support to use Wonka\'s security helpers.', null, null, __METHOD__);
+        }
+
+        if (false === $raw) {
+            $randomBytes = bin2hex($randomBytes);
+        }
+
+        if (is_callable($filter)) {
+            $randomBytes = $filter($randomBytes);
+        }
+
+        return $randomBytes;
+    }
+
+    /**
+     * @param string     $algorithm
+     * @param int        $entropy
+     * @param bool|false $raw
+     *
+     * @return string
+     */
+    public static function getRandomHash($algorithm = 'sha512', $entropy = 1000000, $raw = false)
+    {
+        if (!in_array($algorithm, hash_algos())) {
+            throw new RuntimeException('Invalid hash algorithm %s called in %s.', null, null, $algorithm, __METHOD__);
+        }
+
+        return hash($algorithm, self::getRandomBytes($entropy), $raw);
+    }
+
+    /**
+     * @param string     $password
+     * @param string     $username
+     * @param bool|false $throwException
+     *
+     * @throws RuntimeException
+     *
+     * @return bool
+     */
+    public static function isSecurePassword($password, $username = '', $throwException = false)
+    {
+        $crackDictionary = crack_opendict(self::PASSWORD_CRACK_DICT);
+
+        try {
+            if (true !== crack_check($password, $username, '', $crackDictionary)) {
+                throw new RuntimeException('Password is not secure: %s.', crack_getlastmessage());
+            }
+
+            if (!preg_match(self::PASSWORD_SECURE_REGEX, $password)) {
+                throw new RuntimeException('Password must meet this requirement: %s.', null, null, self::PASSWORD_SECURE_REGEX);
+            }
+
+        } catch (RuntimeException $exception) {
+
+            if ($throwException) {
+                throw $exception;
+            }
+
+            return false;
+
+        } finally {
+            crack_closedict($crackDictionary);
+        }
+
+        return true;
+    }
+
+    /**
+     * @param int $length
+     *
+     * @return string
+     */
+    public static function getRandomPassword($length = 12)
+    {
+        if ($length < 8) {
+            throw new RuntimeException('%s: Cannot generate secure password less than 8 characters.', null, null, __METHOD__);
+        }
+
+        $specialCharacters = '!@#$%';
+
+        do {
+            $randomPassword = substr(Security::getRandomHash(), 0, $length);
+
+            for ($i = 0; $i < $length/2; $i++) {
+                $randomPassword[$index = mt_rand(0, $length-1)] = strtoupper($randomPassword[$index]);
+            }
+
+            for ($i = 0; $i < $length/4; $i++) {
+                $randomPassword[mt_rand(0, $length-1)] = substr(str_shuffle($specialCharacters), 0, 1);
+            }
+        } while (false === self::isSecurePassword($randomPassword));
+
+        return $randomPassword;
+    }
+
+    /**
+     * @deprecated {@see getRandomBytes()}
+     *
      * @param int         $bytes
      * @param bool        $base64
      * @param string|null $limitRegularExpression
@@ -28,21 +157,14 @@ class Security
      */
     public static function generateRandom($bytes = 10000000, $base64 = false, $limitRegularExpression = null)
     {
-        $generator = new SecureRandom();
-        $return = $generator->nextBytes($bytes);
+        DeprecationErrorHandler::trigger(__METHOD__, __LINE__, 'New method with new signature should be used: getRandomBytes($limit, $raw, $filter).', '2015-10-26', '2015-12-01');
 
-        if (true === $base64) {
-            $return = base64_encode($return);
-        }
-
-        if ($limitRegularExpression !== null) {
-            $return = preg_replace($limitRegularExpression, '', $return);
-        }
-
-        return $return;
+        return SecurityDeprecated::generateRandom($bytes, $base64, $limitRegularExpression);
     }
 
     /**
+     * @deprecated {@see getRandomHash()}
+     *
      * @param string $hashAlgorithm
      * @param bool   $hashReturnRaw
      * @param int    $bytes
@@ -51,16 +173,14 @@ class Security
      */
     public static function generateRandomHash($hashAlgorithm = 'sha512', $hashReturnRaw = false, $bytes = 10000000)
     {
-        $random = self::generateRandom($bytes);
+        DeprecationErrorHandler::trigger(__METHOD__, __LINE__, 'New method with new signature should be used: getRandomHash($algorithm, $entropy, $raw).', '2015-10-26', '2015-12-01');
 
-        return hash(
-            $hashAlgorithm,
-            $random,
-            $hashReturnRaw
-        );
+        return SecurityDeprecated::generateRandomHash($hashAlgorithm, $hashReturnRaw, $bytes);
     }
 
     /**
+     * @deprecated {@see Security::isSecurePassword}
+     *
      * @param string $password
      * @param string $pattern
      *
@@ -68,48 +188,23 @@ class Security
      */
     public static function doesPasswordMeetRequirements($password, $pattern = '#.*^(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$#')
     {
-        if (preg_match($pattern, $password)) {
-            return true;
-        } else {
-            return false;
-        }
+        DeprecationErrorHandler::trigger(__METHOD__, __LINE__, 'New method with new signature should be used: isPasswordSecure.', '2015-10-26', '2015-12-01');
+
+        return SecurityDeprecated::doesPasswordMeetRequirements($password, $password);
     }
 
     /**
+     * @deprecated {@see getRandomPassword()}
+     *
      * @param int $length
      *
      * @return string
      */
-    public static function generateRandomPassword($length = 8)
+    public static function generateRandomPassword($length = 12)
     {
-        $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-=+;:,.?';
-        $characterCount = strlen($characters);
-        $password = '';
-        $loopLimit = 1000;
-        $loopCount = 0;
+        DeprecationErrorHandler::trigger(__METHOD__, __LINE__, 'New method with new signature should be used: getRandomPassword().', '2015-10-26', '2015-12-01');
 
-        while (true) {
-            $password .= substr(str_shuffle($characters), 0, ($length > $characterCount ? $characterCount : $length));
-
-            if (strlen($password) <= $length) {
-                continue;
-            }
-
-            $password = substr($password, 0, $length);
-
-            if (true === self::doesPasswordMeetRequirements($password)) {
-                break;
-            }
-
-            if (++$loopCount > $loopLimit) {
-                throw new RuntimeException('Reached loop count trying to create random password in "%s". Lower requirements.',
-                    null, null, __METHOD__);
-            }
-
-            $password = '';
-        }
-
-        return $password;
+        return SecurityDeprecated::generateRandomPassword($length);
     }
 }
 

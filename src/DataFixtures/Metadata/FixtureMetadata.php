@@ -150,15 +150,7 @@ class FixtureMetadata
      */
     public function hasReferenceByIndexEnabled()
     {
-        if (true === $this->tree->get('references', 'index')) {
-            return true;
-        }
-
-        if (true === $this->tree->get('references', 'usingId')) {
-            return true;
-        }
-
-        return false;
+        return (bool) ($this->tree->get('references', 'index') || $this->tree->get('references', 'usingId'));
     }
 
     /**
@@ -166,15 +158,7 @@ class FixtureMetadata
      */
     public function hasReferenceByColumnsEnabled()
     {
-        if (true === $this->tree->get('references', 'columns')) {
-            return true;
-        }
-
-        if (true === $this->tree->get('references', 'usingColumns')) {
-            return true;
-        }
-
-        return false;
+        return (bool) ($this->tree->get('references', 'columns') || $this->tree->get('references', 'usingColumns'));
     }
 
     /**
@@ -201,7 +185,7 @@ class FixtureMetadata
      */
     public function getDependency($name)
     {
-        return $this->tree->get('dependency', $name);
+        return $this->tree->get('dependencies', $name);
     }
 
     /**

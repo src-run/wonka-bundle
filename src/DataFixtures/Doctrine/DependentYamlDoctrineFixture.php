@@ -12,6 +12,7 @@
 namespace Scribe\WonkaBundle\DataFixtures\Doctrine;
 
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Scribe\Wonka\Utility\ClassInfo;
 
 /**
  * DependentYamlDoctrineFixture.
@@ -33,6 +34,10 @@ class DependentYamlDoctrineFixture extends YamlDoctrineFixture implements Depend
             $dependencies[] = $className;
         }
 
+        if (count($dependencies) === 0) {
+            throw new \RuntimeException(sprintf('No dependencies defined for %s.', $this->m->getName()));
+        }
+
         return (array) $dependencies;
     }
 
@@ -43,12 +48,24 @@ class DependentYamlDoctrineFixture extends YamlDoctrineFixture implements Depend
      */
     protected function resolveDependencyType(array $depIds)
     {
-        if (isset($depIds['entity']) && ($value = $this->container->getParameter($depIds['entity']))) {
-            return $this->resolveEntityClassToDependency($value);
+        $ormLoader = (bool) (isset($depIds['ormLoader']) ? $depIds['ormLoader'] : false);
+
+        if ($ormLoader === true && isset($depIds['entity'])) {
+            return $this->resolveContainerParameterToLoader($depIds['entity']);
         }
 
-        if (isset($depIds['loaderClass'])) {
-            return (string) $depIds['loaderClass'];
+        return false;
+    }
+
+    /**
+     * @param string $service
+     *
+     * @return bool|string
+     */
+    protected function resolveContainerParameterToLoader($service)
+    {
+        if ($value = $this->container->getParameter($service)) {
+            return $this->resolveEntityClassToDependency($value);
         }
 
         return false;
@@ -61,7 +78,7 @@ class DependentYamlDoctrineFixture extends YamlDoctrineFixture implements Depend
      */
     protected function resolveEntityClassToDependency($value)
     {
-        if (1 !== preg_match('{(\BBundle\\\)((?:[^\s]*\\\)Entity[^\s]*\b)}', $value, $matches)) {
+        if (1 !== preg_match('{(Bundle\\\)((?:[^\s]*\\\)Entity[^\s]*\b)}', $value, $matches)) {
             return false;
         }
 
