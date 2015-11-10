@@ -22,12 +22,12 @@ class AppKernel extends Kernel
     public function setup()
     {
         $this
-            ->addBundle('\Symfony\Bundle\MonologBundle\MonologBundle')
+//            ->addBundle('\Symfony\Bundle\MonologBundle\MonologBundle')
             ->addBundle('\Symfony\Bundle\FrameworkBundle\FrameworkBundle')
             ->addBundle('\Symfony\Bundle\SecurityBundle\SecurityBundle')
-            ->addBundle('\Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle')
+//            ->addBundle('\Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle')
             ->addBundle('\Scribe\WonkaBundle\ScribeWonkaBundle')
-            ->addBundle('\Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle', 'dev', 'test')
+//            ->addBundle('\Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle', 'dev', 'test')
             ->addBundle('\Symfony\Bundle\DebugBundle\DebugBundle', 'dev', 'test');
     }
 }

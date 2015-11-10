@@ -36,6 +36,4 @@ security:
 
     access_control: ~
 
-monolog: ~
-
 scribe_wonka: ~

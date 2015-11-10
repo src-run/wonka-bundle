@@ -19,8 +19,8 @@ class SecurityTest extends WonkaTestCase
     public function testRandomPassword()
     {
         static::assertTrue(Security::isSecurePassword(Security::getRandomPassword(10)));
-        static::assertEquals(8, Security::isSecurePassword(Security::getRandomPassword(8)));
-        static::assertEquals(100, Security::isSecurePassword(Security::getRandomPassword(100)));
+        static::assertEquals(12, strlen(Security::getRandomPassword(12)));
+        static::assertEquals(100, strlen(Security::getRandomPassword(100)));
     }
 
     public function testRandomPasswordExceptionTooShort()

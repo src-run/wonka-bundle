@@ -13,6 +13,7 @@ namespace Scribe\WonkaBundle\Utility\Security;
 
 use Scribe\Wonka\Exception\RuntimeException;
 use Scribe\Wonka\Utility\Error\DeprecationErrorHandler;
+use Scribe\Wonka\Utility\Extension;
 
 /**
  * Class Security.
@@ -42,27 +43,12 @@ class Security
             throw new RuntimeException('%s: Cannot generate random bytes of less than 1.', null, null, __METHOD__);
         }
 
-        $iteration = 0;
-        $iterationLimit = $length * 2;
+        $random = random_bytes($length);
 
-        do {
-            $randomBytes = openssl_random_pseudo_bytes($length, $isCryptographicallyStrong);
-            $iteration++;
-        } while (true !== $isCryptographicallyStrong && $iteration < $iterationLimit);
+        if (false === $raw) { $random = bin2hex($random); }
+        if (is_callable($filter)) { $random = $filter($random); }
 
-        if (false === $randomBytes) {
-            throw new RuntimeException('%s: PHP must be compiled with OpenSSL support to use Wonka\'s security helpers.', null, null, __METHOD__);
-        }
-
-        if (false === $raw) {
-            $randomBytes = bin2hex($randomBytes);
-        }
-
-        if (is_callable($filter)) {
-            $randomBytes = $filter($randomBytes);
-        }
-
-        return $randomBytes;
+        return $random;
     }
 
     /**
@@ -92,10 +78,12 @@ class Security
      */
     public static function isSecurePassword($password, $username = '', $throwException = false)
     {
-        $crackDictionary = crack_opendict(self::PASSWORD_CRACK_DICT);
+        if (false !== ($crackEnabled = Extension::isEnabled('crack'))) {
+            $crackDictionary = crack_opendict(self::PASSWORD_CRACK_DICT);
+        }
 
         try {
-            if (true !== crack_check($password, $username, '', $crackDictionary)) {
+            if ($crackEnabled && true !== crack_check($password, $username, '', $crackDictionary)) {
                 throw new RuntimeException('Password is not secure: %s.', crack_getlastmessage());
             }
 
@@ -112,7 +100,9 @@ class Security
             return false;
 
         } finally {
-            crack_closedict($crackDictionary);
+            if ($crackEnabled) {
+                crack_closedict($crackDictionary);
+            }
         }
 
         return true;

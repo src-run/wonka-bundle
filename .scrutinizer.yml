@@ -9,7 +9,7 @@ filter:
         - 'bin/'
         - 'build/'
         - 'docs/'
-        - 'src/Tests/'
+        - 'tests/'
         - 'src/Resources/'
         - 'vendor/'
 
