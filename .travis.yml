@@ -13,8 +13,8 @@ matrix:
 
 before_install:
     - git clone -b master https://github.com/scr-be/build-knowledge-shared.git config
-    - sh app/config/shared_public/build/php_build-mod_igbinary.sh
-    - sh app/config/shared_public/build/php_build-mod_twig.sh
+    - bash config/build/php/compile-mods/php_build-mod_igbinary.sh
+    - bash config/build/php/compile-mods/php_build-mod_twig.sh
     - bash config/build/php/runtime-conf/php_build-cfg_travis.sh
     - mkdir -p build/logs
     - mkdir -p bin
