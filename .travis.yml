@@ -2,43 +2,35 @@
 
 language: php
 
+php:
+  - 5.6
+  - 7.0
+
+sudo: false
+
 env:
-    global:
-        - secure: GFZ4RQeYo9a57V0HUxJjIheB1q+bIRBvLt3j26TB5wusu3AEI3BAM4v/uyCAWEKO0fafW2J4L/RM5lINclH8u2C1gtzGG2nZ5NlKt7b8dM3WawZOqQaMbhgjgzR1NO3oIzSDouwvsPlTnz3pNvec73CJYsydllQJcCRNJLOEEEw=
-
-matrix:
-    include:
-        - php: 5.6
-        - php: 7.0
-
-before_install:
-    - git clone -b master https://github.com/scr-be/build-knowledge-shared.git config
-    - bash config/build/php/compile-mods/php_build-mod_igbinary.sh
-    - bash config/build/php/compile-mods/php_build-mod_twig.sh
-    - bash config/build/php/runtime-conf/php_build-cfg_travis.sh
-    - mkdir -p build/logs
-    - mkdir -p bin
-
-install:
-    - travis_retry composer self-update
-    - travis_retry composer clear-cache
-    - travis_retry composer install --no-interaction || travis_retry composer update --no-interaction
-
-script:
-    - bin/phpunit --verbose --configuration phpunit.xml.dist
-
-after_script:
-    - if [[ ${TRAVIS_PHP_VERSION:0:1} != "7" ]]; then bin/coveralls -vvv; fi
-    - if [[ ${TRAVIS_PHP_VERSION:0:1} != "7" ]]; then bin/ocular code-coverage:upload --format=php-clover build/logs/clover.xml; fi
+  global:
+    - scribe_packaged: .scribe-package.yml
+    - secure: GFZ4RQeYo9a57V0HUxJjIheB1q+bIRBvLt3j26TB5wusu3AEI3BAM4v/uyCAWEKO0fafW2J4L/RM5lINclH8u2C1gtzGG2nZ5NlKt7b8dM3WawZOqQaMbhgjgzR1NO3oIzSDouwvsPlTnz3pNvec73CJYsydllQJcCRNJLOEEEw=
 
 notifications:
-    webhooks:
-        urls:
-            - https://webhooks.gitter.im/e/e68ce78711e19ccbe524
-        on_success: change
-        on_failure: always
-        on_start  : never
-    slack:
-        secure: fQJkH85f60YbHu0y3y7lptnouX3IULkX9f8wrEq4+SFI7n7Uy6RLRhz1wRioOR0gjRcX4dH+40ZZit3GpLB0M781cOwuBAcnobrU6coE8YdbFLrK/EFD/qXM/6RlwRik/3TA3ZX5C1WQfrBxnxq3jvuTFDplrXoxThS3lIl/KCo=
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/e68ce78711e19ccbe524
+  slack:
+    secure: fQJkH85f60YbHu0y3y7lptnouX3IULkX9f8wrEq4+SFI7n7Uy6RLRhz1wRioOR0gjRcX4dH+40ZZit3GpLB0M781cOwuBAcnobrU6coE8YdbFLrK/EFD/qXM/6RlwRik/3TA3ZX5C1WQfrBxnxq3jvuTFDplrXoxThS3lIl/KCo=
+
+before_install:
+  - git clone -b master https://github.com/scr-be/build-knowledge-shared.git config
+
+install:
+  - bash config/builders/build-reqs/build-reqs.bash up
+  - composer install -n || composer update -n
+
+script:
+  - bin/phpunit --verbose --configuration phpunit.xml.dist
+
+after_script:
+  - bash config/builders/build-reqs/build-reqs.bash down
 
 ...

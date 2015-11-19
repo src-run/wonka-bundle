@@ -11,7 +11,6 @@
 
 namespace Scribe\WonkaBundle\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Scribe\WonkaBundle\Component\DependencyInjection\AbstractExtension;
 
 /**

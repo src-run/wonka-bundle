@@ -78,6 +78,8 @@ class Security
      */
     public static function isSecurePassword($password, $username = '', $throwException = false)
     {
+        $crackDictionary = null;
+
         if (false !== ($crackEnabled = Extension::isEnabled('crack'))) {
             $crackDictionary = crack_opendict(self::PASSWORD_CRACK_DICT);
         }
@@ -100,9 +102,11 @@ class Security
             return false;
 
         } finally {
+
             if ($crackEnabled) {
                 crack_closedict($crackDictionary);
             }
+
         }
 
         return true;

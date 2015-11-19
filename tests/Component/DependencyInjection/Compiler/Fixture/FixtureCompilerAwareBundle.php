@@ -11,12 +11,12 @@
 
 namespace Scribe\WonkaBundle\Tests\Component\DependencyInjection\Compiler\Fixture;
 
-use Scribe\WonkaBundle\DependencyInjection\Compiler\Bundle\AbstractCompilerAwareBundle;
+use Scribe\WonkaBundle\Component\DependencyInjection\Compiler\Pass\AbstractCompilerPass;
 
 /**
  * Class FixtureCompilerAwareBundle.
  */
-class FixtureCompilerAwareBundle extends AbstractCompilerAwareBundle
+class FixtureCompilerAwareBundle extends AbstractCompilerPass
 {
     /**
      * Return the name of the service that handles the collection of tagged items found (the chain manager).
