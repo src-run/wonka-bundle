@@ -1,41 +1,53 @@
-# Cache and logs (Symfony2)
+#
+# Scribe Inc.
+# General-purpose PHP GitIgnore File
+#
+
+# Symfony 2
 /app/cache/*
 /app/logs/*
 !app/cache/.gitkeep
 !app/logs/.gitkeep
 
-# Cache and logs (Symfony3)
+# Symfony 3
 /var/cache/*
 /var/logs/*
 !var/cache/.gitkeep
 !var/logs/.gitkeep
 
-# Parameters
+# Symfony/Silex/Other Parameter Files
 /app/config/parameters.yml
 /app/config/parameters.ini
 
-# Managed by Composer
+# Composer-created Directories
 /app/bootstrap.php.cache
 /var/bootstrap.php.cache
-/bin/*
-!bin/console
-!bin/symfony_requirements
 /vendor/
+!bin/.gitkeep
+composer.lock
 
-# Assets and user uploads
+# Generated Assets
 /web/bundles/
 /web/uploads/
+/web/css/
+/web/js/
+/web/compiled
 
-# PHPUnit
-/app/phpunit.xml
+# PHPUnit (Non-Dist)
 /phpunit.xml
 
 # Build data
-/build/
+!build/.gitkeep
 
-# Composer PHAR
-/composer.phar
-/composer.lock
-
+# IDEA Directories
 /.idea/
+
+# Scribe-Specific
+/app/config/sami.php
 /config/
+
+# Remember to Use *.md Variants
+LICENSE
+README
+
+# EOF
