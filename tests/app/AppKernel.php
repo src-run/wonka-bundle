@@ -22,7 +22,7 @@ class AppKernel extends Kernel
     public function setup()
     {
         $this
-//            ->addBundle('\Symfony\Bundle\MonologBundle\MonologBundle')
+            ->addBundle('\Symfony\Bundle\MonologBundle\MonologBundle')
             ->addBundle('\Symfony\Bundle\FrameworkBundle\FrameworkBundle')
             ->addBundle('\Symfony\Bundle\SecurityBundle\SecurityBundle')
 //            ->addBundle('\Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle')

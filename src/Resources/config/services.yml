@@ -16,7 +16,7 @@ services:
     s.wonka.utility.logger_callable:
         class     : %s.wonka.utility.logger_callable.class%
         arguments :
-            - '?@logger'
+            - '@logger'
 
     s.wonka.utility.service_finder:
         class     : %s.wonka.utility.service_finder.class%
