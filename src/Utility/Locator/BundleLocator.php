@@ -27,15 +27,15 @@ class BundleLocator
      */
     public static function bundlePartsFromNamespace($namespace)
     {
-       preg_match('#([^\\\]*)\\\([^\\\]*)Bundle\\\#', (string) $namespace, $matches);
+       preg_match('#([^\\\]*)(?:(?:\\\[^\\\]*)*?)?\\\([^\\\]*)Bundle\\\#', (string) $namespace, $matches);
 
         if (is_iterable_empty($matches) || count($matches) !== 3) {
             return [null, null];
         }
 
         return [
-            strtolower($matches[1]),
-            strtolower($matches[2]),
+            strtolower(preg_replace('#(?<=\\w)(?=[A-Z])#', "_$1", $matches[1])),
+            strtolower(preg_replace('#(?<=\\w)(?=[A-Z])#', "_$1", $matches[2])),
         ];
     }
 }

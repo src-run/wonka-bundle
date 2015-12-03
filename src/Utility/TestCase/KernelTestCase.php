@@ -53,11 +53,11 @@ class KernelTestCase extends BaseKernelTestCase
 
     public function clearKernelCache()
     {
-        if (!$this->container instanceof ContainerInterface) {
+        if (!static::$staticContainer instanceof ContainerInterface) {
             return;
         }
 
-        $cacheDir = $this->container->getParameter('kernel.cache_dir');
+        $cacheDir = static::$staticContainer->getParameter('kernel.cache_dir');
 
         $this->removeDirectoryIfExists(realpath($cacheDir));
     }

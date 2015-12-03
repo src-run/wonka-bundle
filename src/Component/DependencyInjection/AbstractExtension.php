@@ -130,6 +130,23 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
     }
 
     /**
+     * @return string[]
+     */
+    protected function getNamespaceAndVendorAndBundleName()
+    {
+        $caller = get_called_class();
+
+        if (is_null_or_empty_string($namespace = implode('\\', ClassInfo::getNamespaceSet($caller)))) {
+            throw new RuntimeException('Unable to automatically determine vendor/bundle for extension.');
+        }
+
+        list($vendor, $bundle) = BundleLocator::bundlePartsFromNamespace($caller);
+        $vendor = $vendor === 'scribe' ? 's' : $vendor;
+
+        return [$namespace, $vendor, $bundle];
+    }
+
+    /**
      * Loads the configuration (builds the container).
      *
      * @param array            $configs   collection of configs to load
@@ -139,18 +156,8 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $caller = get_called_class();
-
-        if (is_null_or_empty_string($namespace = implode('\\', ClassInfo::getNamespaceSet($caller)))) {
-            return $this;
-        }
-
+        list($namespace, $vendor, $bundle) = $this->getNamespaceAndVendorAndBundleName();
         $configurationClassName = '\\' . $namespace . '\\Configuration';
-        list($vendor, $bundle)  = BundleLocator::bundlePartsFromNamespace($caller);
-
-        if ($vendor === 'scribe') {
-            $vendor = 's';
-        }
 
         $this->autoLoad($configs, $container, new $configurationClassName(), $vendor . '.' . $bundle);
 
