@@ -1,7 +1,7 @@
 # Scribe: Wonka Bundle
 
 [![Travis](https://scr.be/wonka-bundle/travis_shield)](https://scr.be/wonka-bundle/travis)
-[![Scrutinizer](https://scr.be/wonka-bundle/scrutinizer_shield)](https://scr.be/wonka-bundle/scrutinizer)
+[![Codacy](https://scr.be/wonka-bundle/codacy_shield)](https://scr.be/wonka-bundle/codacy)
 [![Coveralls](https://scr.be/wonka-bundle/coveralls_shield)](https://scr.be/wonka-bundle/coveralls)
 [![Gemnasium](https://scr.be/wonka-bundle/gemnasium_shield)](https://scr.be/wonka-bundle/gemnasium)
 

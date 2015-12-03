@@ -23,6 +23,7 @@
 /app/bootstrap.php.cache
 /var/bootstrap.php.cache
 /vendor/
+/bin/*
 !bin/.gitkeep
 composer.lock
 
@@ -37,6 +38,7 @@ composer.lock
 /phpunit.xml
 
 # Build data
+/build/*
 !build/.gitkeep
 
 # IDEA Directories
