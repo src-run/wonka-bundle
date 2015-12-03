@@ -9,7 +9,7 @@
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="true"
-         bootstrap="app/config/shared_public/tests/bootstrap/phpunit.php">
+         bootstrap="config/testers/bootstrap/phpunit.php">
     <testsuites>
         <testsuite name="Scribe Wonka Bundle">
             <directory>./tests/</directory>
