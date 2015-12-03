@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-require_once __DIR__.'/../app/config/shared_public/tests/bootstrap/includes/constants.php';
+require_once __DIR__.'/../config/testers/bootstrap/includes/constants.php';
 
 umask(TEST_BS_FILE_CONSOLE_APP_UMASK);
 set_time_limit(TEST_BS_FILE_CONSOLE_APP_EXEC_LIMIT);
