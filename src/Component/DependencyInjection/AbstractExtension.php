@@ -157,9 +157,9 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
     public function load(array $configs, ContainerBuilder $container)
     {
         list($namespace, $vendor, $bundle) = $this->getNamespaceAndVendorAndBundleName();
-        $configurationClassName = '\\' . $namespace . '\\Configuration';
+        $configurationClassName = '\\'.$namespace.'\\Configuration';
 
-        $this->autoLoad($configs, $container, new $configurationClassName(), $vendor . '.' . $bundle);
+        $this->autoLoad($configs, $container, new $configurationClassName(), $vendor.'.'.$bundle);
 
         return $this;
     }
@@ -283,7 +283,7 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
     protected function processConfigsToParameters(array $configSet = [], $currentId = null, $parseEmptyValueSet = true)
     {
         if (true === (count($configSet) === 0)) {
-            return ($parseEmptyValueSet === true ? $this->handleConfigsToParameterWhenEmpty($currentId, $configSet) : $this);
+            return $parseEmptyValueSet === true ? $this->handleConfigsToParameterWhenEmpty($currentId, $configSet) : $this;
         }
 
         foreach ($configSet as $id => $value) {
@@ -319,7 +319,7 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
             return $this->handleConfigsToParameterWhenArrayInt($prefixedId, $value);
         }
 
-        $this->processConfigsToParameters($value, $noPrefixId.$this->getIndexSeparator() . $currentId);
+        $this->processConfigsToParameters($value, $noPrefixId.$this->getIndexSeparator().$currentId);
 
         return $this;
     }
@@ -432,11 +432,11 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
      */
     private function normalizeConfigParameterIndex($resolvedIndexValue)
     {
-        $validFirstChar   = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $validFirstChar = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $regexDeliminator = preg_quote($this->indexSeparator, '#');
 
         $normalizationRegexSet = [
-            '#'.$regexDeliminator.'+#'            => $this->indexSeparator,
+            '#'.$regexDeliminator.'+#' => $this->indexSeparator,
             '#[^a-z0-9'.$regexDeliminator.'_-]#i' => '',
         ];
 

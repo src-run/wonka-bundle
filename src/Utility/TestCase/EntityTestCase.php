@@ -54,7 +54,7 @@ abstract class EntityTestCase extends KernelTestCase
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function tearDown()
     {

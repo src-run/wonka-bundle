@@ -12,7 +12,7 @@
 namespace Scribe\WonkaBundle\Component\Bundle;
 
 /**
- * Class CompilerAwareBundleInterface
+ * Class CompilerAwareBundleInterface.
  */
 interface CompilerAwareBundleInterface
 {

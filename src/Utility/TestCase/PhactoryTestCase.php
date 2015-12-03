@@ -42,7 +42,7 @@ abstract class PhactoryTestCase extends EntityTestCase
     /**
      * array for storing all Phactory objects as they are generated.
      *
-     * @var Array
+     * @var array
      */
     private $sampleData = [];
 
@@ -167,7 +167,7 @@ abstract class PhactoryTestCase extends EntityTestCase
 
     public function createRowCountTimes($table, $count = 1)
     {
-        for ($i = 1; $i <= $count; $i++) {
+        for ($i = 1; $i <= $count; ++$i) {
             $row = $this->factory->create($table);
             $this->recordSampleData($table, $row);
         }
@@ -186,7 +186,7 @@ abstract class PhactoryTestCase extends EntityTestCase
             }
         }
 
-        for ($i = 1; $i <= $count; $i++) {
+        for ($i = 1; $i <= $count; ++$i) {
             $row = $this->factory->createWithAssociations($table, $assocs);
             $this->recordSampleData($table, $row);
         }
@@ -268,7 +268,7 @@ abstract class PhactoryTestCase extends EntityTestCase
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function tearDown()
     {

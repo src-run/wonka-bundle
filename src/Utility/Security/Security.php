@@ -45,8 +45,12 @@ class Security
 
         $random = random_bytes($length);
 
-        if (false === $raw) { $random = bin2hex($random); }
-        if (is_callable($filter)) { $random = $filter($random); }
+        if (false === $raw) {
+            $random = bin2hex($random);
+        }
+        if (is_callable($filter)) {
+            $random = $filter($random);
+        }
 
         return $random;
     }
@@ -92,21 +96,16 @@ class Security
             if (!preg_match(self::PASSWORD_SECURE_REGEX, $password)) {
                 throw new RuntimeException('Password must meet this requirement: %s.', null, null, self::PASSWORD_SECURE_REGEX);
             }
-
         } catch (RuntimeException $exception) {
-
             if ($throwException) {
                 throw $exception;
             }
 
             return false;
-
         } finally {
-
             if ($crackEnabled) {
                 crack_closedict($crackDictionary);
             }
-
         }
 
         return true;
@@ -126,14 +125,14 @@ class Security
         $specialCharacters = '!@#$%';
 
         do {
-            $randomPassword = substr(Security::getRandomHash(), 0, $length);
+            $randomPassword = substr(self::getRandomHash(), 0, $length);
 
-            for ($i = 0; $i < $length/2; $i++) {
-                $randomPassword[$index = mt_rand(0, $length-1)] = strtoupper($randomPassword[$index]);
+            for ($i = 0; $i < $length / 2; ++$i) {
+                $randomPassword[$index = mt_rand(0, $length - 1)] = strtoupper($randomPassword[$index]);
             }
 
-            for ($i = 0; $i < $length/4; $i++) {
-                $randomPassword[mt_rand(0, $length-1)] = substr(str_shuffle($specialCharacters), 0, 1);
+            for ($i = 0; $i < $length / 4; ++$i) {
+                $randomPassword[mt_rand(0, $length - 1)] = substr(str_shuffle($specialCharacters), 0, 1);
             }
         } while (false === self::isSecurePassword($randomPassword));
 

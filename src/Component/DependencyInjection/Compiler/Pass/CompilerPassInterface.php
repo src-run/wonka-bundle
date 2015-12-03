@@ -14,7 +14,7 @@ namespace Scribe\WonkaBundle\Component\DependencyInjection\Compiler\Pass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface as BaseCompilerPassInterface;
 
 /**
- * Class CompilerPassInterface
+ * Class CompilerPassInterface.
  */
 interface CompilerPassInterface extends BaseCompilerPassInterface
 {

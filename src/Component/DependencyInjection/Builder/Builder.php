@@ -35,7 +35,7 @@ class Builder
      */
     public static function create()
     {
-        return new self;
+        return new self();
     }
 
     /**
@@ -92,7 +92,7 @@ class Builder
      */
     public function setupBuilderEmpty()
     {
-        $this->setTreeBuilder($treeBuilder = new TreeBuilder);
+        $this->setTreeBuilder($treeBuilder = new TreeBuilder());
 
         return $this;
     }

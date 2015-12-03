@@ -36,7 +36,7 @@ class SecurityTest extends WonkaTestCase
             'short',
             'contemplation',
             'thisIsBe@#77erAn3ShouldPa33',
-            'thisPa33e3CrackLibButDoesNotMeetRegex'
+            'thisPa33e3CrackLibButDoesNotMeetRegex',
         ];
 
         $expected = [
@@ -44,10 +44,10 @@ class SecurityTest extends WonkaTestCase
             false,
             false,
             true,
-            false
+            false,
         ];
 
-        for ($i = 0; $i < count($passwords); $i++) {
+        for ($i = 0; $i < count($passwords); ++$i) {
             static::assertEquals($expected[$i], Security::isSecurePassword($passwords[$i]));
         }
     }
@@ -62,12 +62,12 @@ class SecurityTest extends WonkaTestCase
     {
         $random = [];
 
-        for ($i = 0; $i < 10000; $i++) {
+        for ($i = 0; $i < 10000; ++$i) {
             $random[] = Security::getRandomBytes(10, true);
             static::assertEquals(10, strlen($random[$i]));
         }
 
-        for ($i = 0; $i < 10000; $i++) {
+        for ($i = 0; $i < 10000; ++$i) {
             $randomValue = $random[$i];
             unset($random[$i]);
             static::assertFalse(in_array($randomValue, $random));
@@ -75,16 +75,16 @@ class SecurityTest extends WonkaTestCase
 
         $random = [];
 
-        for ($i = 0; $i < 10000; $i++) {
-            $random[] = Security::getRandomBytes(10, false, function($string) {
+        for ($i = 0; $i < 10000; ++$i) {
+            $random[] = Security::getRandomBytes(10, false, function ($string) {
                 return str_replace('a', '', $string);
             });
             static::assertFalse(strpos($random[$i], 'a'));
         }
 
-        for ($i = 1; $i < 10000; $i++) {
+        for ($i = 1; $i < 10000; ++$i) {
             static::assertEquals($i, strlen(Security::getRandomBytes($i, true)));
-            static::assertEquals($i*2, strlen(Security::getRandomBytes($i, false)));
+            static::assertEquals($i * 2, strlen(Security::getRandomBytes($i, false)));
         }
     }
 

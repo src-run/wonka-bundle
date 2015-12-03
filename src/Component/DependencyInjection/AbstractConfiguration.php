@@ -46,7 +46,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
      */
     protected function getRootName()
     {
-        $caller      = get_called_class();
+        $caller = get_called_class();
         list($v, $b) = BundleLocator::bundlePartsFromNamespace($caller);
 
         return $v.'_'.$b;

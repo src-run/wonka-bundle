@@ -11,8 +11,6 @@
 
 namespace Scribe\WonkaBundle\Component\DependencyInjection\Compiler\Registrar;
 
-use Scribe\Wonka\Exception\RuntimeException;
-use Scribe\Wonka\Utility\ClassInfo;
 use Scribe\Wonka\Utility\Mapper\ParametersToPropertiesMapperTrait;
 use Scribe\WonkaBundle\Component\DependencyInjection\Compiler\Attendant\CompilerAttendantInterface;
 
@@ -31,7 +29,7 @@ abstract class AbstractCompilerRegistrar implements CompilerRegistrarInterface
     /**
      * @var string[]
      */
-    protected $interfaceCollection = [ CompilerAttendantInterface::INTERFACE_NAME ];
+    protected $interfaceCollection = [CompilerAttendantInterface::INTERFACE_NAME];
 
     /**
      * Construct object with default parameters. Any number of parameters may be passed so long as they are each a

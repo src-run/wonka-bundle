@@ -32,7 +32,6 @@ class Kernel extends BaseKernel
     }
 
     /**
-     * @return void
      */
     public function setup()
     {
@@ -58,7 +57,7 @@ class Kernel extends BaseKernel
             }
 
             if (substr($absoluteName, 0, 1) !== '\\') {
-                $absoluteName = '\\' . $absoluteName;
+                $absoluteName = '\\'.$absoluteName;
             }
 
             $this->envBundles[(string) $env][] = $absoluteName;
@@ -102,7 +101,7 @@ class Kernel extends BaseKernel
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $configurationFilePath = $this->getRootDir() . '/config/config_' . $this->getEnvironment() . '.yml';
+        $configurationFilePath = $this->getRootDir().'/config/config_'.$this->getEnvironment().'.yml';
 
         $loader->load($configurationFilePath);
     }

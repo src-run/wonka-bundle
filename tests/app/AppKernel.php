@@ -17,7 +17,6 @@ use Scribe\WonkaBundle\Component\HttpKernel\Kernel;
 class AppKernel extends Kernel
 {
     /**
-     * @return void
      */
     public function setup()
     {

@@ -19,12 +19,12 @@ use Scribe\Wonka\Exception\Exception;
 class ContainerException extends Exception implements ContainerExceptionInterface
 {
     /**
-     * @param string|null  $message        An error message string (optionally fed to sprintf if optional args are given)
-     * @param int|null     $code           The error code (which should be from ORMExceptionInterface). If null, the value
-     *                                     of ExceptionInterface::CODE_GENERIC will be used.
-     * @param mixed        $previous       The previous exception, if applicable.
-     * @param mixed        $replaceSet,... All extra parameters passed are used to provide replacement values against the
-     *                                     exception message.
+     * @param string|null $message        An error message string (optionally fed to sprintf if optional args are given)
+     * @param int|null    $code           The error code (which should be from ORMExceptionInterface). If null, the value
+     *                                    of ExceptionInterface::CODE_GENERIC will be used.
+     * @param mixed       $previous       The previous exception, if applicable.
+     * @param mixed       $replaceSet,... All extra parameters passed are used to provide replacement values against the
+     *                                    exception message.
      */
     public function __construct($message = null, $code = null, $previous = null, ...$replaceSet)
     {

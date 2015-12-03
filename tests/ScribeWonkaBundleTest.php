@@ -48,12 +48,16 @@ class ScribeWonkaBundleTest extends PHPUnit_Framework_TestCase
     public function clearKernelCacheDirectory($directoryPath = null)
     {
         if ($directoryPath === null) {
-            if (true !== static::$container->hasParameter('kernel.cache_dir')) { return; }
+            if (true !== static::$container->hasParameter('kernel.cache_dir')) {
+                return;
+            }
             $directoryPath = static::$container->getParameter('kernel.cache_dir');
-            if (true !== is_dir($directoryPath)) { return; }
+            if (true !== is_dir($directoryPath)) {
+                return;
+            }
         }
 
-        foreach ((array) glob($directoryPath . '/*') as $file) {
+        foreach ((array) glob($directoryPath.'/*') as $file) {
             is_dir($file) ? $this->clearKernelCacheDirectory($file) : unlink($file);
         }
 
