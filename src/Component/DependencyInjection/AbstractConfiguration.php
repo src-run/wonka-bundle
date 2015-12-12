@@ -11,10 +11,12 @@
 
 namespace Scribe\WonkaBundle\Component\DependencyInjection;
 
-use Symfony\Component\Config\Definition\Builder\NodeDefinition;
-use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Scribe\WonkaBundle\Component\DependencyInjection\Builder\NodeBuilderManager;
 use Scribe\WonkaBundle\Utility\Locator\BundleLocator;
-use Scribe\WonkaBundle\Component\DependencyInjection\Builder\Builder;
+use Scribe\WonkaBundle\Component\DependencyInjection\Builder\TreeBuilderManager;
+use Symfony\Component\Config\Definition\Builder\NodeDefinition;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
  * Class AbstractConfiguration.
@@ -22,21 +24,27 @@ use Scribe\WonkaBundle\Component\DependencyInjection\Builder\Builder;
 abstract class AbstractConfiguration implements ConfigurationInterface
 {
     /**
-     * @var Builder
+     * @var TreeBuilderManager
      */
     protected $builderRoot;
 
     /**
-     * @var Builder[]
+     * @var TreeBuilderManager[]
      */
     protected $builderSet = [];
+
+    /**
+     * @var NodeBuilderManager[]
+     */
+    protected $nodeBuilderSet = [];
+
 
     /**
      * @return NodeDefinition
      */
     public function getConfigTreeBuilder()
     {
-        $this->getBuilderRoot()->getNodeBuilder()->end();
+        $this->getBuilderRoot()->getNodeDefinition()->end();
 
         return $this->getBuilderRoot()->getTreeBuilder();
     }
@@ -53,28 +61,42 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     }
 
     /**
-     * @return Builder
+     * @return TreeBuilderManager
      */
     protected function getBuilderRoot()
     {
-        if (false === ($this->builderRoot instanceof Builder)) {
+        if (false === ($this->builderRoot instanceof TreeBuilderManager)) {
             $name = $this->getRootName();
-            $this->builderRoot = Builder::create()->setupBuilder($name);
+            $this->builderRoot = TreeBuilderManager::create()->newBuilder($name);
         }
 
         return $this->builderRoot;
     }
 
     /**
-     * @return Builder
+     * @return TreeBuilder
      */
     protected function getBuilder($name)
     {
         if (false === array_key_exists((string) $name, $this->builderSet)) {
-            $this->builderSet[(string) $name] = Builder::create()->setupBuilder((string) $name);
+            $this->builderSet[(string) $name] = TreeBuilderManager::create()->newBuilder((string) $name);
         }
 
         return $this->builderSet[(string) $name];
+    }
+
+    /**
+     * @param $name
+     * @param $type
+     * @return NodeBuilderManager
+     */
+    protected function getNodeDefinition($name, $type)
+    {
+        if (false === array_key_exists((string) $name, $this->nodeBuilderSet)) {
+            $this->nodeBuilderSet[(string) $name] = NodeBuilderManager::create()->newBuilder($name, $type);
+        }
+
+        return $this->nodeBuilderSet[(string) $name]->getNodeDefinition();
     }
 }
 
