@@ -45,7 +45,7 @@ class Kernel extends BaseKernel
      */
     protected function addBundle($absoluteName, ...$envSet)
     {
-        if (true === is_iterable_empty($envSet)) {
+        if (true === isEmptyIterable($envSet)) {
             $this->envBundles['all'][] = $absoluteName;
 
             return $this;

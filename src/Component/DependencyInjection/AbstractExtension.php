@@ -136,7 +136,7 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
     {
         $caller = get_called_class();
 
-        if (is_null_or_empty_string($namespace = implode('\\', ClassInfo::getNamespaceSet($caller)))) {
+        if (isNullOrEmpty($namespace = implode('\\', ClassInfo::getNamespaceSet($caller)))) {
             throw new RuntimeException('Unable to automatically determine vendor/bundle for extension.');
         }
 

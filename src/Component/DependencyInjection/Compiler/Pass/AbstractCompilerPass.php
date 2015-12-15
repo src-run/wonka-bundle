@@ -79,7 +79,7 @@ abstract class AbstractCompilerPass implements CompilerPassInterface
         $registrarSrvDef = $container->getDefinition($registrarSrvName);
         $attendantSrvSet = $container->findTaggedServiceIds($attendantTagName);
 
-        if (is_iterable_empty($attendantSrvSet)) {
+        if (isEmptyIterable($attendantSrvSet)) {
             return $this;
         }
 
@@ -151,7 +151,7 @@ abstract class AbstractCompilerPass implements CompilerPassInterface
             unset($attributeSet['priority']);
         }
 
-        if (is_iterable_empty($attributeSet)) {
+        if (isEmptyIterable($attributeSet)) {
             return (array) [];
         }
 

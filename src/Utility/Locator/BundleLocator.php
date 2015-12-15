@@ -29,7 +29,7 @@ class BundleLocator
     {
         preg_match('#([^\\\]*)(?:(?:\\\[^\\\]*)*?)?\\\([^\\\]*)Bundle\\\#', (string) $namespace, $matches);
 
-        if (is_iterable_empty($matches) || count($matches) !== 3) {
+        if (isEmptyIterable($matches) || count($matches) !== 3) {
             return [null, null];
         }
 
