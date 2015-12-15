@@ -11,8 +11,6 @@
 
 namespace Scribe\WonkaBundle\Component\DependencyInjection\Builder;
 
-use Symfony\Component\Config\Definition\Builder\NodeBuilder;
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 
@@ -33,7 +31,7 @@ abstract class AbstractBuilderManager
      */
     public static function create()
     {
-        return new static;
+        return new static();
     }
 
     /**

@@ -38,7 +38,6 @@ abstract class AbstractConfiguration implements ConfigurationInterface
      */
     protected $nodeBuilderSet = [];
 
-
     /**
      * @return NodeDefinition
      */
@@ -88,6 +87,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     /**
      * @param $name
      * @param $type
+     *
      * @return NodeBuilderManager
      */
     protected function getNodeDefinition($name, $type)
