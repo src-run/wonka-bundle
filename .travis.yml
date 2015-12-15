@@ -1,36 +1,38 @@
 ---
 
-language: php
+sudo : false
 
-php:
+language : php
+
+php :
   - 5.6
   - 7.0
+  - hhvm
 
-sudo: false
+matrix :
+  fast_finish    : true
+  allow_failures :
+    - php : hhvm
 
-env:
-  global:
-    - scribe_packaged: .scribe-package.yml
-    - secure: GFZ4RQeYo9a57V0HUxJjIheB1q+bIRBvLt3j26TB5wusu3AEI3BAM4v/uyCAWEKO0fafW2J4L/RM5lINclH8u2C1gtzGG2nZ5NlKt7b8dM3WawZOqQaMbhgjgzR1NO3oIzSDouwvsPlTnz3pNvec73CJYsydllQJcCRNJLOEEEw=
+env :
+  global :
+    - build_package : true
 
-notifications:
-  webhooks:
-    urls:
-      - https://webhooks.gitter.im/e/e68ce78711e19ccbe524
-  slack:
-    secure: fQJkH85f60YbHu0y3y7lptnouX3IULkX9f8wrEq4+SFI7n7Uy6RLRhz1wRioOR0gjRcX4dH+40ZZit3GpLB0M781cOwuBAcnobrU6coE8YdbFLrK/EFD/qXM/6RlwRik/3TA3ZX5C1WQfrBxnxq3jvuTFDplrXoxThS3lIl/KCo=
+git :
+  depth : 3
 
-before_install:
-  - git clone https://github.com/scr-be/build-knowledge-shared.git config
+before_install :
+  - git clone --depth=1 --branch=master https://github.com/scr-be/build-knowledge-shared.git config
 
-install:
-  - bash config/builders/build-reqs/build-reqs.bash up
-  - composer install -n || composer update -n
+install :
+  - bash config/builders/build-reqs/build-reqs.bash up-env
+  - bash config/builders/build-reqs/build-reqs.bash up-app
 
-script:
+script :
   - bin/phpunit --verbose --configuration phpunit.xml.dist
 
-after_script:
-  - bash config/builders/build-reqs/build-reqs.bash down
+after_script :
+  - bash config/builders/build-reqs/build-reqs.bash dn-app
+  - bash config/builders/build-reqs/build-reqs.bash dn-env
 
 ...
