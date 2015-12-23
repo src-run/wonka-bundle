@@ -165,6 +165,23 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
     }
 
     /**
+     * Determines if bundle is enabled. Intended to be used with the following config options:
+     * - {@see \Symfony/Component/Config/Definition/Builder/ArrayNodeDefinition::canBeDisabled()})
+     * - {@see \Symfony/Component/Config/Definition/Builder/ArrayNodeDefinition::canBeEnabled()})
+     * Extend your bundle extension class from the following implementations to handle automatically:
+     * - {@see \Scribe\WonkaBundle\Component\DependencyInjection\AbstractEnableableExtension}
+     * - {@see \Scribe\WonkaBundle\Component\DependencyInjection\AbstractDisableableExtension}
+     * 
+     * @param  array|null $configSet
+     * 
+     * @return bool|null
+     */
+    final protected function isEnabled(array $configSet = null)
+    {
+        return getArrayElement('enabled', getFirstArrayElement($configSet));
+    }
+
+    /**
      * Helper method to be called from load method ({@see load}) that automate the tedious task of parsing the config
      * tree to container parameter as well as loading any required service definition files.
      *
@@ -178,7 +195,8 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
     final protected function autoLoad(array $configSet, ContainerBuilder $container, ConfigurationInterface $configuration, $prefix = null)
     {
         $this->setContainer($container);
-        $this->autoLoadConfiguration($configSet, $configuration, $prefix)->autoLoadServices($container);
+        $this->autoLoadConfiguration($configSet, $configuration, $prefix);
+        $this->autoLoadServices($container, $configSet);
 
         return $this;
     }
@@ -193,25 +211,26 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
      *
      * @return $this
      */
-    final protected function autoLoadConfiguration(array $configSet, ConfigurationInterface $configuration, $prefix = null)
+    protected function autoLoadConfiguration(array $configSet, ConfigurationInterface $configuration, $prefix = null)
     {
         if (null !== $prefix) {
             $this->setIndexPrefix($prefix);
         }
 
-        $processedConfigSet = $this->processConfiguration($configuration, $configSet);
+        $this->processConfigsToParameters($this->processConfiguration($configuration, $configSet), null, false);
 
-        return $this->processConfigsToParameters($processedConfigSet, null, false);
+        return $this;
     }
 
     /**
      * Load all the services by iterating over the {@see $this->serviceFiles} defined at runtime; Yaml or XML based.
      *
      * @param ContainerBuilder $container
+     * @param array|null       $configSet
      *
      * @return $this
      */
-    final protected function autoLoadServices(ContainerBuilder $container)
+    protected function autoLoadServices(ContainerBuilder $container, array $configSet = null)
     {
         $resolvedDirectory = $this->resolveBundleDirectory($container);
 

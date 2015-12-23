@@ -45,9 +45,11 @@ abstract class AbstractCompilerPass implements CompilerPassInterface
      */
     public function getRegistrarAddAttendantMethodName()
     {
-        $addMethodName = $this->registrarAddAttendantMethodName;
+        if (isNullOrEmpty($this->registrarAddAttendantMethodName)) {
+            return self::REGISTRAR_ADD_ATTENDANT_METHOD_NAME;
+        }
 
-        return (string) (null === $addMethodName ? self::REGISTRAR_ADD_ATTENDANT_METHOD_NAME : $addMethodName);
+        return $this->registrarAddAttendantMethodName;
     }
 
     /**

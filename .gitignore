@@ -25,7 +25,9 @@
 /vendor/
 /bin/*
 !bin/.gitkeep
-composer.lock
+/composer.lock
+/composer
+/composer.phar
 
 # Generated Assets
 /web/bundles/

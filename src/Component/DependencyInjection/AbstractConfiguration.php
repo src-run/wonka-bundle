@@ -78,10 +78,20 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     protected function getBuilder($name)
     {
         if (false === array_key_exists((string) $name, $this->builderSet)) {
-            $this->builderSet[(string) $name] = TreeBuilderManager::create()->newBuilder((string) $name);
+            $this->builderSet[(string) $name] = $this->getGhostBuilder($name);
         }
 
         return $this->builderSet[(string) $name];
+    }
+
+    /**
+     * @param  string $name
+     * 
+     * @return TreeBuilder
+     */
+    protected function getGhostBuilder($name)
+    {
+        return TreeBuilderManager::create()->newBuilder((string) $name);
     }
 
     /**

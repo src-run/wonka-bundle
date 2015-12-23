@@ -40,9 +40,7 @@ interface CompilerPassInterface extends BaseCompilerPassInterface
     public function getRegistrarAddAttendantMethodName();
 
     /**
-     * @param string $methodName
-     *
-     * @return $this
+     * @param string $methodName\
      */
     public function setRegistrarAddAttendantMethodName($methodName);
 }

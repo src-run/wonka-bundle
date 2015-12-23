@@ -11,3 +11,5 @@ php_exts : igbinary
 app_prep : dep-composer
 app_post : ~
 app_path : ~
+pkg_name : wonka-bundle
+pkg_desc : a collection of objects, interfaces, and traits aimed at simplifying Symfony bundle setup and configuration. This includes helpers for defining advanced bundle config definitions, implementing kernel compiler passes, and much more.
