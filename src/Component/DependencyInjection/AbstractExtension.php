@@ -171,9 +171,9 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
      * Extend your bundle extension class from the following implementations to handle automatically:
      * - {@see \Scribe\WonkaBundle\Component\DependencyInjection\AbstractEnableableExtension}
      * - {@see \Scribe\WonkaBundle\Component\DependencyInjection\AbstractDisableableExtension}
-     * 
+     *
      * @param  array|null $configSet
-     * 
+     *
      * @return bool|null
      */
     final protected function isEnabled(array $configSet = null)

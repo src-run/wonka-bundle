@@ -86,7 +86,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
 
     /**
      * @param  string $name
-     * 
+     *
      * @return TreeBuilder
      */
     protected function getGhostBuilder($name)
