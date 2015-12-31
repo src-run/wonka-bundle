@@ -29,6 +29,10 @@ class BundleLocator
     public static function bundlePartsFromNamespace($namespace)
     {
         $normalize = function ($v) {
+            if (substr($v, -6) === 'Bundle') {
+                $v = substr($v, 0, strlen($v) - 6);
+            }
+
             return strtolower(preg_replace('#(?<=\\w)(?=[A-Z])#', '_$1', $v));
         };
 
@@ -40,12 +44,11 @@ class BundleLocator
 
         $bundleRoot = $normalize(array_shift($fqcnParts));
 
-        $bundlePart = array_filter($fqcnParts, function (&$v) {
+        $bundlePart = array_filter($fqcnParts, function ($v) {
             static $end = false;
 
             if (substr($v, -6) === 'Bundle') {
                 $end = true;
-                $v = substr($v, 0, strlen($v) - 6);
 
                 return true;
             }
