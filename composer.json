@@ -39,7 +39,7 @@
         "symfony/phpunit-bridge"   : "~2.8|~3.0",
         "phpunit/phpunit"          : "~5.0",
         "codacy/coverage"          : "~1.0",
-        "satooshi/php-coveralls"   : "~0.7"
+        "satooshi/php-coveralls"   : "~1.0"
     },
     "conflict" : {
         "scribe/mantle-bundle" : "<2.2.0"
@@ -50,12 +50,20 @@
         }
     },
     "autoload-dev" : {
-        "psr-4" : { "Scribe\\WonkaBundle\\Tests\\" : "tests/" }
+        "psr-4" : {
+            "Scribe\\WonkaBundle\\Tests\\" : "tests/"
+        }
     },
     "minimum-stability" : "dev",
     "prefer-stable"     : true,
     "config": {
-        "bin-dir" : "bin"
+        "process-timeout"        : 120,
+        "bin-dir"                : "bin",
+        "cache-files-ttl"        : 60,
+        "classmap-authoritative" : true,
+        "github-expose-hostname" : false,
+        "notify-on-install"      : false,
+        "discard-changes"        : "stash"
     },
     "extra": {
         "branch-alias": {

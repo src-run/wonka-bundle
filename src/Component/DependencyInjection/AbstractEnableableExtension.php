@@ -1,9 +1,10 @@
 <?php
 
 /*
- * This file is part of the Scribe Wonka Bundle.
+ * This file is part of the Wonka Bundle.
  *
- * (c) Scribe Inc. <oss@scr.be>
+ * (c) Scribe Inc.     <scr@src.run>
+ * (c) Rob Frawley 2nd <rmf@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
@@ -11,19 +12,7 @@
 
 namespace Scribe\WonkaBundle\Component\DependencyInjection;
 
-use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Scribe\Wonka\Utility\Arrays;
-use Scribe\Wonka\Utility\ClassInfo;
-use Scribe\Wonka\Utility\Filter\StringFilter;
-use Scribe\Wonka\Exception\RuntimeException;
-use Scribe\WonkaBundle\Component\DependencyInjection\Container\ContainerAwareInterface;
-use Scribe\WonkaBundle\Component\DependencyInjection\Container\ContainerAwareTrait;
-use Scribe\WonkaBundle\Component\DependencyInjection\Loader\XmlFileLoader;
-use Scribe\WonkaBundle\Component\DependencyInjection\Loader\YamlFileLoader;
-use Scribe\WonkaBundle\Utility\Locator\BundleLocator;
 
 /**
  * Class AbstractEnableableExtension.
@@ -31,7 +20,9 @@ use Scribe\WonkaBundle\Utility\Locator\BundleLocator;
 abstract class AbstractEnableableExtension extends AbstractExtension
 {
     /**
-     * Load all the services by iterating over the {@see $this->serviceFiles} defined at runtime; Yaml or XML based.
+     * Overrides parent {@see AbstractExtension::autoLoadServices()} method with implementation
+     * that disables loading if enabled is not true in extension configuration file. Can be used with
+     * {@see \Symfony/Component/Config/Definition/Builder/ArrayNodeDefinition::canBeEnabled()}).
      *
      * @param ContainerBuilder $container
      * @param array|null       $configSet

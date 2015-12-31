@@ -24,4 +24,3 @@ Ensure the following requirements are met when contributing pull-requests to thi
   class NameOfClass
   { // ...
   ```
-  
