@@ -28,16 +28,34 @@ class BundleLocator
      */
     public static function bundlePartsFromNamespace($namespace)
     {
-        preg_match('#([^\\\]*)(?:(?:\\\[^\\\]*)*?)?\\\([^\\\]*)Bundle\\\#', (string) $namespace, $matches);
+        $normalize = function ($v) {
+            return strtolower(preg_replace('#(?<=\\w)(?=[A-Z])#', '_$1', $v));
+        };
 
-        if (isEmptyIterable($matches) || count($matches) !== 3) {
+        $fqcnParts = explode('\\', $namespace);
+
+        if (isEmptyIterable($fqcnParts) || !(count($fqcnParts) >= 2)) {
             return [null, null];
         }
 
-        return [
-            strtolower(preg_replace('#(?<=\\w)(?=[A-Z])#', '_$1', $matches[1])),
-            strtolower(preg_replace('#(?<=\\w)(?=[A-Z])#', '_$1', $matches[2])),
-        ];
+        $bundleRoot = $normalize(array_shift($fqcnParts));
+
+        $bundlePart = array_filter($fqcnParts, function (&$v) {
+            static $end = false;
+
+            if (substr($v, -6) === 'Bundle') {
+                $end = true;
+                $v = substr($v, 0, strlen($v) - 6);
+
+                return true;
+            }
+
+            return !$end;
+        });
+
+        $bundlePart = array_map($normalize, $bundlePart);
+
+        return [ $bundleRoot, implode('_', $bundlePart) ];
     }
 }
 
