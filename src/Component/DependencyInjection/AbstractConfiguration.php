@@ -15,6 +15,7 @@ namespace Scribe\WonkaBundle\Component\DependencyInjection;
 use Scribe\WonkaBundle\Component\DependencyInjection\Builder\NodeBuilderManager;
 use Scribe\WonkaBundle\Utility\Locator\BundleLocator;
 use Scribe\WonkaBundle\Component\DependencyInjection\Builder\TreeBuilderManager;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -74,7 +75,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     }
 
     /**
-     * @return TreeBuilder
+     * @return TreeBuilderManager
      */
     protected function getBuilder($name)
     {
@@ -88,7 +89,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     /**
      * @param string $name
      *
-     * @return TreeBuilder
+     * @return TreeBuilderManager
      */
     protected function getGhostBuilder($name)
     {
@@ -99,7 +100,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
      * @param $name
      * @param $type
      *
-     * @return NodeBuilderManager
+     * @return NodeDefinition|ArrayNodeDefinition
      */
     protected function getNodeDefinition($name, $type)
     {

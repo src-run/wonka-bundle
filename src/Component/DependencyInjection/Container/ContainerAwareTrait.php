@@ -15,17 +15,26 @@ namespace Scribe\WonkaBundle\Component\DependencyInjection\Container;
 use Scribe\WonkaBundle\Component\DependencyInjection\Exception\InvalidContainerParameterException;
 use Scribe\WonkaBundle\Component\DependencyInjection\Exception\InvalidContainerServiceException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait as SymfonyContainerAwareTrait;
 
 /**
  * Class ContainerAwareTrait.
  */
 trait ContainerAwareTrait
 {
-    /*
-     * @see Symfony\Component\DependencyInjection\ContainerAwareTrait
+    /**
+     * @var ContainerInterface
      */
-    use SymfonyContainerAwareTrait;
+    protected $container;
+
+    /**
+     * Sets the container.
+     *
+     * @param ContainerInterface|null $container
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
 
     /**
      * Getter for container property.
