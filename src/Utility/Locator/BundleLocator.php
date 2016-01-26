@@ -58,7 +58,7 @@ class BundleLocator
 
         $bundlePart = array_map($normalize, $bundlePart);
 
-        return [ $bundleRoot, implode('_', $bundlePart) ];
+        return [$bundleRoot, implode('_', $bundlePart)];
     }
 }
 
