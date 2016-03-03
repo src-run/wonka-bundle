@@ -30,7 +30,7 @@
         "symfony/polyfill-php70"       : "~1.0"
     },
     "require-dev" : {
-        "twig/twig"                : "~1.23",
+        "twig/twig"                : "~1.23,<2.0",
         "symfony/symfony"          : "~2.8|~3.0",
         "symfony/stopwatch"        : "~2.8|~3.0",
         "symfony/framework-bundle" : "~2.8|~3.0",
