@@ -38,7 +38,7 @@ class ConfigContainer implements ConfigInterface
     public function get($parameterId)
     {
         if (false === $this->has($parameterId)) {
-            return;
+            return null;
         }
 
         return $this->container->getParameter($parameterId);

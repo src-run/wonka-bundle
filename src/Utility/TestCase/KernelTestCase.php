@@ -55,7 +55,7 @@ class KernelTestCase extends BaseKernelTestCase
     public function clearKernelCache()
     {
         if (!static::$staticContainer instanceof ContainerInterface) {
-            return;
+            return null;
         }
 
         $cacheDir = static::$staticContainer->getParameter('kernel.cache_dir');

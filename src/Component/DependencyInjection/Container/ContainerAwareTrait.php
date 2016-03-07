@@ -68,7 +68,7 @@ trait ContainerAwareTrait
     public function getContainerParameter($parameter)
     {
         if (false === $this->hasContainerParameter($parameter)) {
-            throw new InvalidContainerParameterException(null, null, null, (string) $parameter);
+            throw new InvalidContainerParameterException(null, (string) $parameter);
         }
 
         return $this->container->getParameter($parameter);
@@ -98,7 +98,7 @@ trait ContainerAwareTrait
     public function getContainerService($service)
     {
         if (false === $this->hasContainerService($service)) {
-            throw new InvalidContainerParameterException(null, null, null, (string) $service);
+            throw new InvalidContainerParameterException(null, (string) $service);
         }
 
         return $this->container->get($service);

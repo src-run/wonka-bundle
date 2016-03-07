@@ -22,24 +22,33 @@
         }
     ],
     "require" : {
-        "php"                          : ">=5.6.4,~5.6|~7.0",
-        "scr-be/wonka-library"         : "~0.3",
+        "php"                          : "~5.5|~5.6|~7.0",
+        "scr-be/wonka-library"         : "~0.5",
         "symfony/config"               : "~2.8|~3.0",
-        "symfony/dependency-injection" : "~2.8|~3.0",
         "symfony/http-foundation"      : "~2.8|~3.0",
-        "symfony/polyfill-php70"       : "~1.0"
+        "symfony/dependency-injection" : "~2.8|~3.0",
+        "symfony/polyfill-php70"       : "~1.1",
+        "symfony/polyfill-php56"       : "~1.1",
+        "symfony/polyfill-php55"       : "~1.1",
+        "symfony/polyfill-util"        : "~1.1"
     },
     "require-dev" : {
-        "twig/twig"                : "~1.23,<2.0",
+        "scr-be/arthur-doctrine-library" : "~0.3",
         "symfony/symfony"          : "~2.8|~3.0",
-        "symfony/stopwatch"        : "~2.8|~3.0",
         "symfony/framework-bundle" : "~2.8|~3.0",
         "symfony/debug-bundle"     : "~2.8|~3.0",
+        "symfony/debug"            : "~2.8|~3.0",
         "symfony/monolog-bundle"   : "~2.8|~3.0",
+        "monolog/monolog"          : "~1.18",
+        "symfony/twig-bundle"      : "~2.8|~3.0",
+        "twig/twig"                : "~1.24,<2.0",
+        "symfony/stopwatch"        : "~2.8|~3.0",
         "symfony/phpunit-bridge"   : "~2.8|~3.0",
+        "doctrine/orm"             : "~2.5",
         "phpunit/phpunit"          : "~5.0",
         "codacy/coverage"          : "~1.0",
-        "satooshi/php-coveralls"   : "~1.0"
+        "satooshi/php-coveralls"   : "~1.0",
+        "chriskite/phactory"       : "~0.4"
     },
     "conflict" : {
         "scribe/mantle-bundle" : "<2.2.0"
@@ -67,7 +76,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "0.3-dev"
+            "dev-master": "0.5-dev"
         }
     }
 }

@@ -12,8 +12,6 @@
 
 namespace Scribe\WonkaBundle\Component\Templating;
 
-use Twig_SimpleFilter;
-use Twig_SimpleFunction;
 use Scribe\Wonka\Exception\RuntimeException;
 use Scribe\Wonka\Utility\ClassInfo;
 
@@ -284,11 +282,9 @@ abstract class AbstractTwigExtension extends \Twig_Extension implements TwigExte
             return $this;
         }
 
-        throw new RuntimeException(
-            'Invalid function/filter name provided to $s (you must provide a string).',
-            null, null, null,
-            __METHOD__
-        );
+        throw RuntimeException::create()
+            ->setMessage('Invalid function/filter name provided to $s (you must provide a string).')
+            ->with(__METHOD__);
     }
 
     /**

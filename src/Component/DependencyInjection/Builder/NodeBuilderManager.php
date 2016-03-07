@@ -69,7 +69,7 @@ class NodeBuilderManager extends AbstractBuilderManager
         $method = $type.'Node';
 
         if (!method_exists($this->nodeBuilder, $method)) {
-            throw new RuntimeException('Invalid node type provided;');
+            throw new RuntimeException('Invalid node type provided.');
         }
 
         $this->setNodeDefinition(call_user_func([$this->nodeBuilder, $method], $name));

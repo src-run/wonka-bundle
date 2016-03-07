@@ -15,7 +15,6 @@ namespace Scribe\WonkaBundle\Component\DependencyInjection\Compiler\Pass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * Class AbstractCompilerPass.
@@ -82,7 +81,7 @@ abstract class AbstractCompilerPass implements CompilerPassInterface
         $registrarSrvDef = $container->getDefinition($registrarSrvName);
         $attendantSrvSet = $container->findTaggedServiceIds($attendantTagName);
 
-        if (isEmptyIterable($attendantSrvSet)) {
+        if (isIterableEmpty($attendantSrvSet)) {
             return $this;
         }
 
@@ -154,7 +153,7 @@ abstract class AbstractCompilerPass implements CompilerPassInterface
             unset($attributeSet['priority']);
         }
 
-        if (isEmptyIterable($attributeSet)) {
+        if (isIterableEmpty($attributeSet)) {
             return (array) [];
         }
 

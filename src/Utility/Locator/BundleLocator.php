@@ -38,7 +38,7 @@ class BundleLocator
 
         $fqcnParts = explode('\\', $namespace);
 
-        if (isEmptyIterable($fqcnParts) || !(count($fqcnParts) >= 2)) {
+        if (isIterableEmpty($fqcnParts) || !(count($fqcnParts) >= 2)) {
             return [null, null];
         }
 

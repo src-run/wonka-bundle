@@ -13,7 +13,6 @@
 namespace Scribe\WonkaBundle\Utility\Security;
 
 use Scribe\Wonka\Exception\RuntimeException;
-use Scribe\Wonka\Utility\Error\DeprecationErrorHandler;
 use Scribe\Wonka\Utility\Extension;
 
 /**
@@ -41,7 +40,7 @@ class Security
     public static function getRandomBytes($length = 100, $raw = false, \Closure $filter = null)
     {
         if ($length < 1) {
-            throw new RuntimeException('%s: Cannot generate random bytes of less than 1.', null, null, __METHOD__);
+            throw new RuntimeException('%s: Cannot generate random bytes of less than 1.', __METHOD__);
         }
 
         $random = random_bytes($length);
@@ -66,7 +65,7 @@ class Security
     public static function getRandomHash($algorithm = 'sha512', $entropy = 1000000, $raw = false)
     {
         if (!in_array($algorithm, hash_algos())) {
-            throw new RuntimeException('Invalid hash algorithm %s called in %s.', null, null, $algorithm, __METHOD__);
+            throw new RuntimeException('Invalid hash algorithm %s called in %s.', $algorithm, __METHOD__);
         }
 
         return hash($algorithm, self::getRandomBytes($entropy), $raw);
@@ -95,7 +94,7 @@ class Security
             }
 
             if (!preg_match(self::PASSWORD_SECURE_REGEX, $password)) {
-                throw new RuntimeException('Password must meet this requirement: %s.', null, null, self::PASSWORD_SECURE_REGEX);
+                throw new RuntimeException('Password must meet this requirement: %s.', self::PASSWORD_SECURE_REGEX);
             }
         } catch (RuntimeException $exception) {
             if ($throwException) {
@@ -120,7 +119,7 @@ class Security
     public static function getRandomPassword($length = 12)
     {
         if ($length < 8) {
-            throw new RuntimeException('%s: Cannot generate secure password less than 8 characters.', null, null, __METHOD__);
+            throw new RuntimeException('%s: Cannot generate secure password less than 8 characters.', __METHOD__);
         }
 
         $specialCharacters = '!@#$%';
@@ -129,6 +128,7 @@ class Security
             $randomPassword = substr(self::getRandomHash(), 0, $length);
 
             for ($i = 0; $i < $length / 2; ++$i) {
+                /** @noinspection PhpUndefinedVariableInspection */
                 $randomPassword[$index = mt_rand(0, $length - 1)] = strtoupper($randomPassword[$index]);
             }
 
@@ -138,67 +138,6 @@ class Security
         } while (false === self::isSecurePassword($randomPassword));
 
         return $randomPassword;
-    }
-
-    /**
-     * @deprecated {@see getRandomBytes()}
-     *
-     * @param int         $bytes
-     * @param bool        $base64
-     * @param string|null $limitRegularExpression
-     *
-     * @return string
-     */
-    public static function generateRandom($bytes = 10000000, $base64 = false, $limitRegularExpression = null)
-    {
-        DeprecationErrorHandler::trigger(__METHOD__, __LINE__, 'New method with new signature should be used: getRandomBytes($limit, $raw, $filter).', '2015-10-26', '2015-12-01');
-
-        return SecurityDeprecated::generateRandom($bytes, $base64, $limitRegularExpression);
-    }
-
-    /**
-     * @deprecated {@see getRandomHash()}
-     *
-     * @param string $hashAlgorithm
-     * @param bool   $hashReturnRaw
-     * @param int    $bytes
-     *
-     * @return string
-     */
-    public static function generateRandomHash($hashAlgorithm = 'sha512', $hashReturnRaw = false, $bytes = 10000000)
-    {
-        DeprecationErrorHandler::trigger(__METHOD__, __LINE__, 'New method with new signature should be used: getRandomHash($algorithm, $entropy, $raw).', '2015-10-26', '2015-12-01');
-
-        return SecurityDeprecated::generateRandomHash($hashAlgorithm, $hashReturnRaw, $bytes);
-    }
-
-    /**
-     * @deprecated {@see Security::isSecurePassword}
-     *
-     * @param string $password
-     * @param string $pattern
-     *
-     * @return bool
-     */
-    public static function doesPasswordMeetRequirements($password, $pattern = '#.*^(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$#')
-    {
-        DeprecationErrorHandler::trigger(__METHOD__, __LINE__, 'New method with new signature should be used: isPasswordSecure.', '2015-10-26', '2015-12-01');
-
-        return SecurityDeprecated::doesPasswordMeetRequirements($password, $password);
-    }
-
-    /**
-     * @deprecated {@see getRandomPassword()}
-     *
-     * @param int $length
-     *
-     * @return string
-     */
-    public static function generateRandomPassword($length = 12)
-    {
-        DeprecationErrorHandler::trigger(__METHOD__, __LINE__, 'New method with new signature should be used: getRandomPassword().', '2015-10-26', '2015-12-01');
-
-        return SecurityDeprecated::generateRandomPassword($length);
     }
 }
 

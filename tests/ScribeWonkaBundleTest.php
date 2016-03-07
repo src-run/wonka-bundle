@@ -50,11 +50,11 @@ class ScribeWonkaBundleTest extends PHPUnit_Framework_TestCase
     {
         if ($directoryPath === null) {
             if (true !== static::$container->hasParameter('kernel.cache_dir')) {
-                return;
+                return null;
             }
             $directoryPath = static::$container->getParameter('kernel.cache_dir');
             if (true !== is_dir($directoryPath)) {
-                return;
+                return null;
             }
         }
 

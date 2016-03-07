@@ -23,7 +23,7 @@ trait WonkaTestCaseTrait
     protected function removeDirectoryIfExists($dirPath)
     {
         if (false === is_dir($dirPath)) {
-            return;
+            return null;
         }
 
         $this->removeDirectory($dirPath);
@@ -39,7 +39,7 @@ trait WonkaTestCaseTrait
         $files = glob($path.'/*');
 
         if (false === is_array($files)) {
-            return;
+            return null;
         }
 
         foreach ($files as $file) {

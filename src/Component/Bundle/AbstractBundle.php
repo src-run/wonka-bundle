@@ -13,30 +13,19 @@
 namespace Scribe\WonkaBundle\Component\Bundle;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Scribe\WonkaBundle\Component\DependencyInjection\Compiler\Pass\CompilerPassInterface;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Class AbstractCompilerAwareBundle.
+ * Class AbstractBundle.
  */
-abstract class AbstractCompilerAwareBundle extends AbstractBundle implements CompilerAwareBundleInterface
+abstract class AbstractBundle extends Bundle
 {
-    /**
-     * @return CompilerPassInterface[]
-     */
-    abstract public function getCompilerPassInstances();
-
     /**
      * @param ContainerBuilder $builder
      */
     public function build(ContainerBuilder $builder)
     {
         parent::build($builder);
-
-        foreach ($this->getCompilerPassInstances() as $pass) {
-            if ($pass instanceof CompilerPassInterface) {
-                $builder->addCompilerPass($pass);
-            }
-        }
     }
 }
 

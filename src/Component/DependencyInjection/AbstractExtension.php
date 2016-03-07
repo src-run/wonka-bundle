@@ -286,8 +286,7 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
             case 'yaml':
                 return new YamlFileLoader();
             default:
-                throw new RuntimeException('No available service file loader for %s file with %s extension type.',
-                    null, null, $file, pathinfo($file, PATHINFO_EXTENSION));
+                throw new RuntimeException('No available service file loader for %s file with %s extension type.', $file, pathinfo($file, PATHINFO_EXTENSION));
         }
     }
 
@@ -465,7 +464,9 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
         }
 
         if (false === stripos($validFirstChar, $resolvedIndexValue[0])) {
-            throw new RuntimeException('DI-auto config->parameter ids must begin with a letter: the index "%s" is invalid.', null, null, $resolvedIndexValue);
+            throw RuntimeException::create()
+                ->setMessage('DI-auto config->parameter ids must begin with a letter: the index "%s" is invalid.')
+                ->with($resolvedIndexValue);
         }
 
         return (string) $resolvedIndexValue;

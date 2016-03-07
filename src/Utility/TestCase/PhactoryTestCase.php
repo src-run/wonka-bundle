@@ -14,6 +14,7 @@ namespace Scribe\WonkaBundle\Utility\TestCase;
 
 use PDO;
 use PDOException;
+use Scribe\Doctrine\ORM\Mapping\EntityInterface;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Phactory\Sql\Phactory;
@@ -230,8 +231,7 @@ abstract class PhactoryTestCase extends EntityTestCase
             return $this
                 ->container
                 ->get($this->config[$type]['service'])
-                ->findAll()
-                ;
+                ->findAll();
         } else {
             throw new \Exception("{$method} is not an available method in ".get_class($this));
         }
@@ -259,7 +259,7 @@ abstract class PhactoryTestCase extends EntityTestCase
     }
 
     // checks that a given entity can set its updated_on and modified_on properties
-    public function assertCanGetSetTimes($entity)
+    public function assertCanGetSetTimes(EntityInterface $entity)
     {
         $time = new \Datetime();
         $entity->setCreatedOn($time);
