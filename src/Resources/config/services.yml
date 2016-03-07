@@ -2,28 +2,34 @@
 
 parameters :
 
-    s.wonka.utility.logger_invokable.class    : Scribe\Wonka\Utility\Logger\LoggerInvokable
-    s.wonka.utility.reflection_analyser.class : Scribe\Wonka\Utility\Reflection\ClassReflectionAnalyser
-    s.wonka.utility.service_finder.class      : Scribe\WonkaBundle\Component\DependencyInjection\Container\ServiceFinder
+    s.wonka.reflection_analyser.class                : Scribe\Wonka\Utility\Reflection\ClassReflectionAnalyser
+    s.wonka.invokable_logger.class                   : Scribe\Wonka\Utility\Logger\InvokableLogger
+    s.wonka.invokable_container_value_resolver.class : Scribe\WonkaBundle\Component\DependencyInjection\Container\InvokableContainerValueResolver
 
 services :
 
     s.wonka.utility.reflection_analyser :
-        class : %s.wonka.utility.reflection_analyser.class%
-        calls :
-            - [unsetReflectionClass]
+        alias : s.wonka.reflection_analyser
 
     s.wonka.utility.logger_callable :
-        alias : s.wonka.utility.logger_invokable
+        alias : s.wonka.invokable_logger
 
-    s.wonka.utility.logger_invokable :
-        class     : %s.wonka.utility.logger_invokable.class%
+    s.wonka.utility.service_finder :
+        alias : s.wonka.invokable_container_value_resolver
+
+    s.wonka.reflection_analyser :
+        class : %s.wonka.reflection_analyser.class%
+        calls :
+            - [ unsetReflectionClass ]
+
+    s.wonka.invokable_logger :
+        class     : %s.wonka.invokable_logger.class%
         arguments :
             - '@logger'
 
-    s.wonka.utility.service_finder :
-        class     : %s.wonka.utility.service_finder.class%
-        arguments :
-            - '@service_container'
+    s.wonka.invokable_container_value_resolver :
+        class : %s.wonka.invokable_container_value_resolver.class%
+        calls :
+            - [ setContainer, [ '@service_container' ] ]
 
 ...

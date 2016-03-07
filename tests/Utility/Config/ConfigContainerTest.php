@@ -29,13 +29,27 @@ class ConfigContainerTest extends KernelTestCase
         $this->config = new ConfigContainer($this->container);
     }
 
+    public function testHasParameter()
+    {
+        static::assertTrue($this->config->has('s.wonka.invokable_logger.class'));
+    }
+
     public function testGetParameter()
     {
-        static::assertTrue($this->config->has('s.wonka.utility.logger_callable.class'));
-        static::assertEquals(
-            'Scribe\Wonka\Utility\Logger\LoggerCallable',
-            $this->config->get('s.wonka.utility.logger_callable.class')
+        static::assertSame(
+            'Scribe\Wonka\Utility\Logger\InvokableLogger',
+            $this->config->get('s.wonka.invokable_logger.class')
         );
+    }
+
+    public function testGetInvalidParameter()
+    {
+        static::assertFalse($this->config->has('s.avcdefghijklmnopqrstuvwxyz0123456789'));
+        static::assertNotEquals(
+            'Scribe\Wonka\Utility\Logger\InvokableLogger',
+            $this->config->get('s.avcdefghijklmnopqrstuvwxyz0123456789')
+        );
+        static::assertNull($this->config->get('s.avcdefghijklmnopqrstuvwxyz0123456789'));
     }
 }
 
