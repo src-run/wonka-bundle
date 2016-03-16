@@ -44,7 +44,8 @@ class InvokableContainerValueResolver implements InvokableContainerValueResolver
     {
         if (!$this->hasContainer()) {
             throw ContainerException::create()
-                ->setMessage('Required container not injected into "%s".', get_called_class());
+                ->setMessage('Required container not injected into "%s".')
+                ->with(get_called_class());
         }
 
         if (substr($lookup, 0, 1) === '%') {
