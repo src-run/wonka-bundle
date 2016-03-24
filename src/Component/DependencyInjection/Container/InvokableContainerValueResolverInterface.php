@@ -12,12 +12,12 @@
 
 namespace Scribe\WonkaBundle\Component\DependencyInjection\Container;
 
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface as SymfonyContainerAwareInterface;
 
 /**
  * Class InvokableContainerValueResolverInterface.
  */
-interface InvokableContainerValueResolverInterface extends ContainerAwareInterface
+interface InvokableContainerValueResolverInterface extends SymfonyContainerAwareInterface
 {
     /**
      * Invoking this class using function syntax, while providing either a

@@ -23,11 +23,11 @@ use Scribe\WonkaBundle\Component\DependencyInjection\Exception\InvalidContainerS
 class InvokableContainerValueResolver implements InvokableContainerValueResolverInterface
 {
     use ContainerAwareTrait {
-        getContainer as protected,
-        hasContainer as protected,
-        getContainerParameter as protected,
-        hasContainerParameter as protected,
-        getContainerService as protected,
+        getContainer as protected;
+        hasContainer as protected;
+        getContainerParameter as protected;
+        hasContainerParameter as protected;
+        getContainerService as protected;
         hasContainerService as protected;
     }
 
