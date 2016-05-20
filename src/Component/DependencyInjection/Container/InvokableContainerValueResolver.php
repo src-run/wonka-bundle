@@ -1,21 +1,20 @@
 <?php
 
 /*
- * This file is part of the Wonka Bundle.
+ * This file is part of the `src-run/wonka-bundle` project.
  *
- * (c) Scribe Inc.     <scr@src.run>
  * (c) Rob Frawley 2nd <rmf@src.run>
+ * (c) Scribe Inc      <scr@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-namespace Scribe\WonkaBundle\Component\DependencyInjection\Container;
+namespace SR\WonkaBundle\Component\DependencyInjection\Container;
 
-use Scribe\Wonka\Exception\RuntimeException;
-use Scribe\WonkaBundle\Component\DependencyInjection\Exception\ContainerException;
-use Scribe\WonkaBundle\Component\DependencyInjection\Exception\InvalidContainerParameterException;
-use Scribe\WonkaBundle\Component\DependencyInjection\Exception\InvalidContainerServiceException;
+use SR\WonkaBundle\Component\DependencyInjection\Exception\ContainerException;
+use SR\WonkaBundle\Component\DependencyInjection\Exception\InvalidContainerParameterException;
+use SR\WonkaBundle\Component\DependencyInjection\Exception\InvalidContainerServiceException;
 
 /**
  * Class InvokableContainerValueResolver.
@@ -34,25 +33,23 @@ class InvokableContainerValueResolver implements InvokableContainerValueResolver
     /**
      * {@inheritdoc}
      *
-     * @param string $lookup
+     * @param string $containerLookup
      *
      * @throws ContainerException
      *
      * @return mixed
      */
-    public function __invoke($lookup)
+    public function __invoke($containerLookup)
     {
         if (!$this->hasContainer()) {
-            throw ContainerException::create()
-                ->setMessage('Required container not injected into "%s".')
-                ->with(get_called_class());
+            throw ContainerException::create()->setMessage('Container not available as expected.');
         }
 
-        if (substr($lookup, 0, 1) === '%') {
-            return $this->normalizeAndGetParameter($lookup);
+        if (substr($containerLookup, 0, 1) === '%') {
+            return $this->normalizeAndGetParameter($containerLookup);
         }
 
-        return $this->normalizeAndGetService($lookup);
+        return $this->normalizeAndGetService($containerLookup);
     }
 
     /**
@@ -66,13 +63,7 @@ class InvokableContainerValueResolver implements InvokableContainerValueResolver
     {
         $parameter = preg_replace('/(?:^[%])|(?:[%]$)/', '', $parameter);
 
-        if ($this->hasContainerParameter($parameter)) {
-            return $this->getContainerParameter($parameter);
-        }
-
-        throw InvalidContainerParameterException::create()
-            ->setMessage('Parameter "%s" could not be found in "%s".')
-            ->with($parameter, get_called_class());
+        $this->getContainerParameter($parameter);
     }
 
     /**
@@ -86,13 +77,7 @@ class InvokableContainerValueResolver implements InvokableContainerValueResolver
     {
         $service = preg_replace('/(?:^[@])/', '', $service);
 
-        if ($this->hasContainerService($service)) {
-            return $this->getContainerService($service);
-        }
-
-        throw InvalidContainerServiceException::create()
-            ->setMessage('Service "%s" could not be found in "%s".')
-            ->with($service, get_called_class());
+        $this->getContainerService($service);
     }
 }
 

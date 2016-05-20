@@ -1,28 +1,28 @@
 <?php
 
 /*
- * This file is part of the Wonka Bundle.
+ * This file is part of the `src-run/wonka-bundle` project.
  *
- * (c) Scribe Inc.     <scr@src.run>
  * (c) Rob Frawley 2nd <rmf@src.run>
+ * (c) Scribe Inc      <scr@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-namespace Scribe\WonkaBundle\Component\DependencyInjection;
+namespace SR\WonkaBundle\Component\DependencyInjection;
 
-use Scribe\WonkaBundle\Component\DependencyInjection\Builder\NodeBuilderManager;
-use Scribe\WonkaBundle\Utility\Locator\BundleLocator;
-use Scribe\WonkaBundle\Component\DependencyInjection\Builder\TreeBuilderManager;
+use SR\WonkaBundle\Component\DependencyInjection\Builder\NodeBuilderManager;
+use SR\WonkaBundle\Utility\Locator\BundleLocator;
+use SR\WonkaBundle\Component\DependencyInjection\Builder\TreeBuilderManager;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * Class AbstractConfiguration.
+ * Class Configuration.
  */
-abstract class AbstractConfiguration implements ConfigurationInterface
+class AbstractConfiguration implements ConfigurationInterface
 {
     /**
      * @var TreeBuilderManager
@@ -54,10 +54,11 @@ abstract class AbstractConfiguration implements ConfigurationInterface
      */
     protected function getRootName()
     {
-        $caller = get_called_class();
-        list($v, $b) = BundleLocator::bundlePartsFromNamespace($caller);
-
-        return $v.'_'.$b;
+        var_dump([
+            __METHOD__,
+            BundleLocator::getName(get_called_class()),
+        ]);
+        return BundleLocator::getName(get_called_class());
     }
 
     /**

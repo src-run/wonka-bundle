@@ -1,16 +1,16 @@
 <?php
 
 /*
- * This file is part of the Wonka Bundle.
+ * This file is part of the `src-run/wonka-bundle` project.
  *
- * (c) Scribe Inc.     <scr@src.run>
  * (c) Rob Frawley 2nd <rmf@src.run>
+ * (c) Scribe Inc      <scr@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-namespace Scribe\WonkaBundle\Component\DependencyInjection\Compiler\Pass;
+namespace SR\WonkaBundle\Component\DependencyInjection\Compiler\Pass;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -22,16 +22,11 @@ use Symfony\Component\DependencyInjection\Reference;
 abstract class AbstractCompilerPass implements CompilerPassInterface
 {
     /**
-     * @var null|string
-     */
-    protected $registrarAddAttendantMethodName;
-
-    /**
      * Return the name of the service that handles the collection of tagged items found (the chain manager).
      *
      * @return string
      */
-    abstract public function getRegistrarSrvName();
+    abstract public function getRegistrarService();
 
     /**
      * Return the name of the search tag to find services to be attached to the chain (the chain subscribers).
@@ -45,23 +40,7 @@ abstract class AbstractCompilerPass implements CompilerPassInterface
      */
     public function getRegistrarAddAttendantMethodName()
     {
-        if (isNullOrEmpty($this->registrarAddAttendantMethodName)) {
-            return self::REGISTRAR_ADD_ATTENDANT_METHOD_NAME;
-        }
-
-        return $this->registrarAddAttendantMethodName;
-    }
-
-    /**
-     * @param string $methodName
-     *
-     * @return $this
-     */
-    public function setRegistrarAddAttendantMethodName($methodName)
-    {
-        $this->registrarAddAttendantMethodName = (string) $methodName;
-
-        return $this;
+        return 'addAttendant';
     }
 
     /**
@@ -71,42 +50,42 @@ abstract class AbstractCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $registrarSrvName = $this->getRegistrarSrvName();
-        $attendantTagName = $this->getAttendantTagName();
+        $serviceSearchTag = $this->getAttendantTagName();
+        $registrarService = $this->getRegistrarService();
 
-        if (false === $container->hasDefinition($registrarSrvName)) {
+        if (!$container->hasDefinition($registrarService)) {
             return $this;
         }
 
-        $registrarSrvDef = $container->getDefinition($registrarSrvName);
-        $attendantSrvSet = $container->findTaggedServiceIds($attendantTagName);
+        $registrar = $container->getDefinition($registrarService);
+        $foundAttendants = $container->findTaggedServiceIds($serviceSearchTag);
 
-        if (isIterableEmpty($attendantSrvSet)) {
+        if (sizeof($foundAttendants) === 0) {
             return $this;
         }
 
-        foreach ($attendantSrvSet as $taggedSrvIdent => $taggedSrvProps) {
-            $this->registerTaggedService($registrarSrvDef, $taggedSrvIdent, $taggedSrvProps);
+        foreach ($foundAttendants as $a => $properties) {
+            $this->registerTaggedService($registrar, $a, $properties);
         }
 
         return $this;
     }
 
     /**
-     * @param Definition $registrarSrvDef
-     * @param string     $attendantSrvIdent
-     * @param array|null $attendantSrvProps
+     * @param Definition $registrar
+     * @param string     $attendantService
+     * @param array|null $attendantProperties
      *
      * @return $this
      */
-    final protected function registerTaggedService(Definition $registrarSrvDef, $attendantSrvIdent, array $attendantSrvProps = [])
+    final protected function registerTaggedService(Definition $registrar, $attendantService, array $attendantProperties = [])
     {
-        $parameters = [new Reference($attendantSrvIdent)];
+        $parameters = [new Reference($attendantService)];
 
-        foreach ($attendantSrvProps as $attributeSet) {
-            $registrarSrvDef->addMethodCall(
+        foreach ($attendantProperties as $attributes) {
+            $registrar->addMethodCall(
                 $this->getRegistrarAddAttendantMethodName(),
-                $this->buildServiceParameters($parameters, $attributeSet)
+                $this->buildServiceParameters($parameters, $attributes)
             );
         }
 
@@ -114,50 +93,46 @@ abstract class AbstractCompilerPass implements CompilerPassInterface
     }
 
     /**
-     * @param array $parameterSet
-     * @param array $attributeSet
+     * @param array $parameters
+     * @param array $attributes
      *
      * @return array
      */
-    final protected function buildServiceParameters(array $parameterSet, array $attributeSet)
+    final protected function buildServiceParameters(array $parameters, array $attributes)
     {
         return (array) array_merge(
-            $parameterSet,
-            $this->buildServiceParameterPriority($attributeSet),
-            $this->buildServiceParameterExtra($attributeSet)
+            $parameters,
+            $this->buildServiceParameterPriority($attributes),
+            $this->buildServiceParameterExtra($attributes)
         );
     }
 
     /**
-     * @param array $attributeSet
+     * @param array $attributes
      *
      * @return array[]
      */
-    final protected function buildServiceParameterPriority(array $attributeSet)
+    final protected function buildServiceParameterPriority(array $attributes)
     {
-        if (false === array_key_exists('priority', $attributeSet)) {
-            return (array) [];
+        if (false === array_key_exists('priority', $attributes)) {
+            return [];
         }
 
-        return (array) ['priority' => $attributeSet['priority']];
+        return ['priority' => $attributes['priority']];
     }
 
     /**
-     * @param array $attributeSet
+     * @param array $attributes
      *
      * @return array[]
      */
-    final protected function buildServiceParameterExtra(array $attributeSet)
+    final protected function buildServiceParameterExtra(array $attributes)
     {
-        if (true === array_key_exists('priority', $attributeSet)) {
-            unset($attributeSet['priority']);
+        if (true === array_key_exists('priority', $attributes)) {
+            unset($attributes['priority']);
         }
 
-        if (isIterableEmpty($attributeSet)) {
-            return (array) [];
-        }
-
-        return (array) ['extra' => $attributeSet];
+        return count($attributes) === 0 ? [] : ['extra' => $attributes];
     }
 }
 

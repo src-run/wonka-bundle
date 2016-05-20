@@ -35,5 +35,3 @@ security:
             anonymous: ~
 
     access_control: ~
-
-scribe_wonka: ~

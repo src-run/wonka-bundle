@@ -1,16 +1,16 @@
 <?php
 
 /*
- * This file is part of the Wonka Bundle.
+ * This file is part of the `src-run/wonka-bundle` project.
  *
- * (c) Scribe Inc.     <scr@src.run>
  * (c) Rob Frawley 2nd <rmf@src.run>
+ * (c) Scribe Inc      <scr@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-use Scribe\WonkaBundle\Component\HttpKernel\Kernel;
+use SR\WonkaBundle\Component\HttpKernel\Kernel;
 
 /**
  * Class AppKernel.
@@ -21,12 +21,11 @@ class AppKernel extends Kernel
      */
     public function setup()
     {
-        $this
-            ->addBundle('\Symfony\Bundle\MonologBundle\MonologBundle')
-            ->addBundle('\Symfony\Bundle\FrameworkBundle\FrameworkBundle')
-            ->addBundle('\Symfony\Bundle\SecurityBundle\SecurityBundle')
-            ->addBundle('\Scribe\WonkaBundle\ScribeWonkaBundle')
-            ->addBundle('\Symfony\Bundle\DebugBundle\DebugBundle', 'dev', 'test');
+        $this->register('\Symfony\Bundle\MonologBundle\MonologBundle');
+        $this->register('\Symfony\Bundle\FrameworkBundle\FrameworkBundle');
+        $this->register('\Symfony\Bundle\SecurityBundle\SecurityBundle');
+        $this->register('\SR\WonkaBundle\WonkaBundle');
+        $this->register('\Symfony\Bundle\DebugBundle\DebugBundle', 'dev', 'test');
     }
 }
 

@@ -1,17 +1,18 @@
 <?php
 
 /*
- * This file is part of the Wonka Bundle.
+ * This file is part of the `src-run/wonka-bundle` project.
  *
- * (c) Scribe Inc.     <scr@src.run>
  * (c) Rob Frawley 2nd <rmf@src.run>
+ * (c) Scribe Inc      <scr@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-namespace Scribe\WonkaBundle\Component\HttpKernel;
+namespace SR\WonkaBundle\Component\HttpKernel;
 
+use SR\Reflection\Inspect;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
@@ -21,47 +22,40 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 class Kernel extends BaseKernel
 {
     /**
-     * @var array[string]
+     * @var array[]
      */
-    protected $envBundles;
+    protected $enviornmentRegistrations;
 
+    /**
+     * @return $this
+     */
     public function clear()
     {
-        $this->envBundles = ['all' => []];
+        $this->enviornmentRegistrations = ['all' => []];
 
         return $this;
     }
 
     /**
-     */
-    public function setup()
-    {
-    }
-
-    /**
-     * @param string        $absoluteName
-     * @param array[string] $enviornmentSet
+     * @param string   $qualifiedName
+     * @param string[] $enviornments
      *
      * @return $this
      */
-    protected function addBundle($absoluteName, ...$envSet)
+    final protected function register($qualifiedName, ...$enviornments)
     {
-        if (true === isIterableEmpty($envSet)) {
-            $this->envBundles['all'][] = $absoluteName;
+        $enviornments = count($enviornments) === 0 ? ['all'] : $enviornments;
 
-            return $this;
+        if (substr($qualifiedName, 0, 1) !== '\\') {
+            $qualifiedName = '\\'.$qualifiedName;
         }
 
-        foreach ($envSet as $env) {
-            if (false === array_key_exists($env, $this->envBundles)) {
-                $this->envBundles[(string) $env] = [];
+        foreach ($enviornments as $e) {
+            if (!array_key_exists($e, $this->enviornmentRegistrations)) {
+                $this->enviornmentRegistrations[$e] = [];
             }
 
-            if (substr($absoluteName, 0, 1) !== '\\') {
-                $absoluteName = '\\'.$absoluteName;
-            }
-
-            $this->envBundles[(string) $env][] = $absoluteName;
+            $this->enviornmentRegistrations[$e][] = $qualifiedName;
         }
 
         return $this;
@@ -70,29 +64,32 @@ class Kernel extends BaseKernel
     /**
      * @return array[]
      */
-    protected function resolveBundles()
+    final protected function resolveBundles()
     {
-        $bundleSetUnresolved = array_unique($this->envBundles['all']);
+        $unresolved = array_unique($this->enviornmentRegistrations['all']);
+        $resolved = [];
+        $enviornment = $this->getEnvironment();
 
-        if (array_key_exists($this->getEnvironment(), $this->envBundles) && $this->getEnvironment() !== 'prod') {
-            $bundleSetUnresolved = array_unique(array_merge($bundleSetUnresolved, $this->envBundles[$this->getEnvironment()]));
+        if ($enviornment !== 'prod' && array_key_exists($enviornment, $this->enviornmentRegistrations)) {
+            $unresolved = array_unique(array_merge($unresolved, $this->enviornmentRegistrations[$enviornment]));
         }
 
-        $bundleSetResolved = [];
-
-        foreach ($bundleSetUnresolved as $bundleName) {
-            $bundleSetResolved[] = new $bundleName();
+        foreach ($unresolved as $bundle) {
+            $resolved[] = new $bundle();
         }
 
-        return $bundleSetResolved;
+        var_dump($resolved);
+
+        return $resolved;
     }
 
     /**
-     * @return array
+     * @return object[]
      */
     final public function registerBundles()
     {
-        $this->clear()->setup();
+        $this->clear();
+        $this->setup();
 
         return $this->resolveBundles();
     }
@@ -102,9 +99,7 @@ class Kernel extends BaseKernel
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $configurationFilePath = $this->getRootDir().'/config/config_'.$this->getEnvironment().'.yml';
-
-        $loader->load($configurationFilePath);
+        $loader->load($this->getRootDir().'/config/config_'.$this->getEnvironment().'.yml');
     }
 }
 

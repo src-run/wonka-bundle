@@ -1,19 +1,20 @@
 <?php
 
 /*
- * This file is part of the Wonka Bundle.
+ * This file is part of the `src-run/wonka-bundle` project.
  *
- * (c) Scribe Inc.     <scr@src.run>
  * (c) Rob Frawley 2nd <rmf@src.run>
+ * (c) Scribe Inc      <scr@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-namespace Scribe\WonkaBundle\Component\DependencyInjection\Compiler\Attendant;
+namespace SR\WonkaBundle\Component\DependencyInjection\Compiler\Attendant;
 
-use Scribe\Wonka\Utility\ClassInfo;
-use Scribe\Wonka\Utility\Mapper\ParametersToPropertiesMapperTrait;
+use SR\Reflection\Inspect;
+use SR\Utility\ClassInspect;
+use SR\Wonka\Utility\Mapper\ParametersToPropertiesMapperTrait;
 
 /**
  * Class AbstractCompilerAttendant.
@@ -28,11 +29,11 @@ abstract class AbstractCompilerAttendant implements CompilerAttendantInterface
      * If passed, these additional parameters will overwrite the default instance properties and,
      * as such, the chain runtime handling.
      *
-     * @param array[],... $parameterSet
+     * @param array[],... $parameters
      */
-    public function __construct(...$parameterSet)
+    public function __construct(...$parameters)
     {
-        $this->assignPropertyCollectionToSelf(...$parameterSet);
+        $this->assignPropertyCollectionToSelf(...$parameters);
     }
 
     /**
@@ -42,13 +43,13 @@ abstract class AbstractCompilerAttendant implements CompilerAttendantInterface
      */
     public function __toString()
     {
-        return (string) $this->getType();
+        return $this->getType();
     }
 
     /**
      * Override to define logic for supported checks.
      *
-     * @param mixed,... $by
+     * @param mixed ...$by
      *
      * @return bool
      */
@@ -62,13 +63,13 @@ abstract class AbstractCompilerAttendant implements CompilerAttendantInterface
      * fully-qualified names can be (and are) used, this implementation does take the assuption that the
      * base names of the implementations does not overlap.
      *
-     * @param false|bool $resolveQualifiedName
+     * @param bool $qualified
      *
      * @return string
      */
-    public function getType($resolveQualifiedName = false)
+    public function getType($qualified = false)
     {
-        return (string) ($resolveQualifiedName === true ? get_called_class() : ClassInfo::getClassName(get_called_class()));
+        return Inspect::thisInstance($this)->name($qualified);
     }
 }
 

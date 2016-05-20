@@ -1,4 +1,6 @@
-[submodule ".config"]
-	path = .config
-	url = https://github.com/scr-be/build-knowledge-shared.git
-	branch = master
+[submodule ".bldr"]
+	path = .bldr
+	url = https://github.com/src-run/usr-src-builder.git
+[submodule ".run"]
+	path = .run
+	url = https://github.com/src-run/usr-src-runner.git

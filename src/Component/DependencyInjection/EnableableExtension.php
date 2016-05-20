@@ -1,23 +1,23 @@
 <?php
 
 /*
- * This file is part of the Wonka Bundle.
+ * This file is part of the `src-run/wonka-bundle` project.
  *
- * (c) Scribe Inc.     <scr@src.run>
  * (c) Rob Frawley 2nd <rmf@src.run>
+ * (c) Scribe Inc      <scr@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-namespace Scribe\WonkaBundle\Component\DependencyInjection;
+namespace SR\WonkaBundle\Component\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Class AbstractEnableableExtension.
+ * Class EnableableExtension.
  */
-abstract class AbstractEnableableExtension extends AbstractExtension
+class EnableableExtension extends Extension
 {
     /**
      * Overrides parent {@see AbstractExtension::autoLoadServices()} method with implementation
@@ -25,14 +25,14 @@ abstract class AbstractEnableableExtension extends AbstractExtension
      * {@see \Symfony/Component/Config/Definition/Builder/ArrayNodeDefinition::canBeEnabled()}).
      *
      * @param ContainerBuilder $container
-     * @param array|null       $configSet
+     * @param array|null       $config
      *
      * @return $this
      */
-    protected function autoLoadServices(ContainerBuilder $container, array $configSet = null)
+    protected function autoLoadServices(ContainerBuilder $container, array $config = null)
     {
-        if ($this->isEnabled($configSet) !== false) {
-            parent::autoLoadServices($container, $configSet);
+        if ($this->isEnabled($config) !== false) {
+            parent::autoLoadServices($container, $config);
         }
 
         return $this;

@@ -1,19 +1,19 @@
 <?php
 
 /*
- * This file is part of the Wonka Bundle.
+ * This file is part of the `src-run/wonka-bundle` project.
  *
- * (c) Scribe Inc.     <scr@src.run>
  * (c) Rob Frawley 2nd <rmf@src.run>
+ * (c) Scribe Inc      <scr@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-namespace Scribe\WonkaBundle\Component\DependencyInjection\Container;
+namespace SR\WonkaBundle\Component\DependencyInjection\Container;
 
-use Scribe\WonkaBundle\Component\DependencyInjection\Exception\InvalidContainerParameterException;
-use Scribe\WonkaBundle\Component\DependencyInjection\Exception\InvalidContainerServiceException;
+use SR\WonkaBundle\Component\DependencyInjection\Exception\InvalidContainerParameterException;
+use SR\WonkaBundle\Component\DependencyInjection\Exception\InvalidContainerServiceException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -53,7 +53,7 @@ trait ContainerAwareTrait
      */
     public function hasContainer()
     {
-        return (bool) ($this->container instanceof ContainerInterface);
+        return $this->container instanceof ContainerInterface;
     }
 
     /**
@@ -67,11 +67,13 @@ trait ContainerAwareTrait
      */
     public function getContainerParameter($parameter)
     {
-        if (false === $this->hasContainerParameter($parameter)) {
-            throw new InvalidContainerParameterException(null, (string) $parameter);
+        if ($this->hasContainerParameter($parameter)) {
+            return $this->container->getParameter($parameter);
         }
 
-        return $this->container->getParameter($parameter);
+        throw InvalidContainerParameterException::create()
+            ->setMessage('The container parameter requested (%s) does not exist.')
+            ->with($parameter);
     }
 
     /**
@@ -83,7 +85,7 @@ trait ContainerAwareTrait
      */
     public function hasContainerParameter($parameter)
     {
-        return (bool) ($this->container->hasParameter($parameter) === true ?: false);
+        return $this->container->hasParameter($parameter);
     }
 
     /**
@@ -97,11 +99,13 @@ trait ContainerAwareTrait
      */
     public function getContainerService($service)
     {
-        if (false === $this->hasContainerService($service)) {
-            throw new InvalidContainerParameterException(null, (string) $service);
+        if ($this->hasContainerService($service)) {
+            return $this->container->get($service);
         }
 
-        return $this->container->get($service);
+        throw InvalidContainerParameterException::create()
+            ->setMessage('The container service requested (%s) does not exist.')
+            ->with($service);
     }
 
     /**
@@ -113,7 +117,7 @@ trait ContainerAwareTrait
      */
     public function hasContainerService($service)
     {
-        return (bool) ($this->container->has($service) === true ?: false);
+        return $this->container->has($service);
     }
 }
 

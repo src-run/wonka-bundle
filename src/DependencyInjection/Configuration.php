@@ -1,23 +1,23 @@
 <?php
 
 /*
- * This file is part of the Wonka Bundle.
+ * This file is part of the `src-run/wonka-bundle` project.
  *
- * (c) Scribe Inc.     <scr@src.run>
  * (c) Rob Frawley 2nd <rmf@src.run>
+ * (c) Scribe Inc      <scr@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-namespace Scribe\WonkaBundle\DependencyInjection;
+namespace SR\WonkaBundle\DependencyInjection;
 
-use Scribe\WonkaBundle\Component\DependencyInjection\AbstractConfiguration;
+use SR\WonkaBundle\Component\DependencyInjection\AbstractConfiguration;
 
 /**
  * Class Configuration.
  */
-class Configuration extends AbstractConfiguration
+class Configuration extends Configuration
 {
 }
 

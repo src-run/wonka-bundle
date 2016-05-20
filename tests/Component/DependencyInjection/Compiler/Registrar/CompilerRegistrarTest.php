@@ -1,20 +1,20 @@
 <?php
 
 /*
- * This file is part of the Wonka Bundle.
+ * This file is part of the `src-run/wonka-bundle` project.
  *
- * (c) Scribe Inc.     <scr@src.run>
  * (c) Rob Frawley 2nd <rmf@src.run>
+ * (c) Scribe Inc      <scr@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-namespace Scribe\WonkaBundle\Tests\Component\DependencyInjection\Compiler\Registrar;
+namespace SR\WonkaBundle\Tests\Component\DependencyInjection\Compiler\Registrar;
 
-use Scribe\WonkaBundle\Tests\Component\DependencyInjection\Compiler\Fixture\FixtureCompilerAttendant;
-use Scribe\WonkaBundle\Tests\Component\DependencyInjection\Compiler\Fixture\FixtureCompilerRegistrar;
-use Scribe\WonkaBundle\Utility\TestCase\WonkaTestCase;
+use SR\WonkaBundle\Tests\Component\DependencyInjection\Compiler\Fixture\FixtureCompilerAttendant;
+use SR\WonkaBundle\Tests\Component\DependencyInjection\Compiler\Fixture\FixtureCompilerRegistrar;
+use SR\WonkaBundle\Utility\TestCase\WonkaTestCase;
 
 /**
  * Class CompilerRegistrarTest.

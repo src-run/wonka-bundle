@@ -1,18 +1,18 @@
 <?php
 
 /*
- * This file is part of the Wonka Bundle.
+ * This file is part of the `src-run/wonka-bundle` project.
  *
- * (c) Scribe Inc.     <scr@src.run>
  * (c) Rob Frawley 2nd <rmf@src.run>
+ * (c) Scribe Inc      <scr@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-namespace Scribe\WonkaBundle\Component\DependencyInjection\Builder;
+namespace SR\WonkaBundle\Component\DependencyInjection\Builder;
 
-use Scribe\Wonka\Exception\RuntimeException;
+use SR\Exception\RuntimeException;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
@@ -69,7 +69,9 @@ class NodeBuilderManager extends AbstractBuilderManager
         $method = $type.'Node';
 
         if (!method_exists($this->nodeBuilder, $method)) {
-            throw new RuntimeException('Invalid node type provided.');
+            throw RuntimeException::create()
+                ->setMessage('Invalid node type "%s" provided when asking for new builder.')
+                ->with($method);
         }
 
         $this->setNodeDefinition(call_user_func([$this->nodeBuilder, $method], $name));

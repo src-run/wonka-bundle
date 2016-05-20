@@ -1,19 +1,19 @@
 <?php
 
 /*
- * This file is part of the Wonka Bundle.
+ * This file is part of the `src-run/wonka-bundle` project.
  *
- * (c) Scribe Inc.     <scr@src.run>
  * (c) Rob Frawley 2nd <rmf@src.run>
+ * (c) Scribe Inc      <scr@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-namespace Scribe\WonkaBundle\Utility\Security;
+namespace SR\WonkaBundle\Utility\Security;
 
-use Scribe\Wonka\Exception\RuntimeException;
-use Scribe\Wonka\Utility\Extension;
+use SR\Utility\EngineInspect;
+use SR\Exception\RuntimeException;
 
 /**
  * Class Security.
@@ -65,7 +65,9 @@ class Security
     public static function getRandomHash($algorithm = 'sha512', $entropy = 1000000, $raw = false)
     {
         if (!in_array($algorithm, hash_algos())) {
-            throw new RuntimeException('Invalid hash algorithm %s called in %s.', $algorithm, __METHOD__);
+            throw RuntimeException::create()
+                ->setMessage('Invalid hash algorithm "%s".')
+                ->with($algorithm);
         }
 
         return hash($algorithm, self::getRandomBytes($entropy), $raw);
@@ -84,17 +86,19 @@ class Security
     {
         $crackDictionary = null;
 
-        if (false !== ($crackEnabled = Extension::isEnabled('crack'))) {
+        if (false !== ($crackEnabled = EngineInspect::extensionLoaded('crack'))) {
             $crackDictionary = crack_opendict(self::PASSWORD_CRACK_DICT);
         }
 
         try {
             if ($crackEnabled && true !== crack_check($password, $username, '', $crackDictionary)) {
-                throw new RuntimeException('Password is not secure: %s.', crack_getlastmessage());
+                throw RuntimeException::create()
+                    ->setMessage('Password is not secure: %s.', crack_getlastmessage());
             }
 
             if (!preg_match(self::PASSWORD_SECURE_REGEX, $password)) {
-                throw new RuntimeException('Password must meet this requirement: %s.', self::PASSWORD_SECURE_REGEX);
+                throw RuntimeException::create()
+                    ->setMessage('Password must meet this requirement: %s.', self::PASSWORD_SECURE_REGEX);
             }
         } catch (RuntimeException $exception) {
             if ($throwException) {
@@ -119,7 +123,8 @@ class Security
     public static function getRandomPassword($length = 12)
     {
         if ($length < 8) {
-            throw new RuntimeException('%s: Cannot generate secure password less than 8 characters.', __METHOD__);
+            throw RuntimeException::create()
+                ->setMessage('%s: Cannot generate secure password less than 8 characters.', __METHOD__);
         }
 
         $specialCharacters = '!@#$%';
@@ -128,7 +133,7 @@ class Security
             $randomPassword = substr(self::getRandomHash(), 0, $length);
 
             for ($i = 0; $i < $length / 2; ++$i) {
-                /** @noinspection PhpUndefinedVariableInspection */
+                /* @noinspection PhpUndefinedVariableInspection */
                 $randomPassword[$index = mt_rand(0, $length - 1)] = strtoupper($randomPassword[$index]);
             }
 

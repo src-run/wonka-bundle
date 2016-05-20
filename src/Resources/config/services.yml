@@ -2,9 +2,9 @@
 
 parameters :
 
-    s.wonka.reflection_analyser.class                : Scribe\Wonka\Utility\Reflection\ClassReflectionAnalyser
-    s.wonka.invokable_logger.class                   : Scribe\Wonka\Utility\Logger\InvokableLogger
-    s.wonka.invokable_container_value_resolver.class : Scribe\WonkaBundle\Component\DependencyInjection\Container\InvokableContainerValueResolver
+    s.wonka.reflection_analyser.class                : SR\Wonka\Utility\Reflection\ClassReflectionAnalyser
+    s.wonka.invokable_logger.class                   : SR\Wonka\Utility\Logger\InvokableLogger
+    s.wonka.invokable_container_value_resolver.class : SR\WonkaBundle\Component\DependencyInjection\Container\InvokableContainerValueResolver
 
 services :
 

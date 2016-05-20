@@ -1,19 +1,19 @@
 <?php
 
 /*
- * This file is part of the Wonka Bundle.
+ * This file is part of the `src-run/wonka-bundle` project.
  *
- * (c) Scribe Inc.     <scr@src.run>
  * (c) Rob Frawley 2nd <rmf@src.run>
+ * (c) Scribe Inc      <scr@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-namespace Scribe\WonkaBundle\Component\DependencyInjection\Compiler\Registrar;
+namespace SR\WonkaBundle\Component\DependencyInjection\Compiler\Registrar;
 
-use Scribe\Wonka\Utility\Mapper\ParametersToPropertiesMapperTrait;
-use Scribe\WonkaBundle\Component\DependencyInjection\Compiler\Attendant\CompilerAttendantInterface;
+use SR\Wonka\Utility\Mapper\ParametersToPropertiesMapperTrait;
+use SR\WonkaBundle\Component\DependencyInjection\Compiler\Attendant\CompilerAttendantInterface;
 
 /**
  * Class AbstractCompilerRegistrar.
@@ -49,7 +49,7 @@ abstract class AbstractCompilerRegistrar implements CompilerRegistrarInterface
      */
     public function count()
     {
-        return (int) count($this->attendantCollection);
+        return count($this->attendantCollection);
     }
 
     /**
@@ -65,7 +65,7 @@ abstract class AbstractCompilerRegistrar implements CompilerRegistrarInterface
      */
     public function getAttendantCollection()
     {
-        return (array) $this->attendantCollection;
+        return $this->attendantCollection;
     }
 
     /**
@@ -92,7 +92,7 @@ abstract class AbstractCompilerRegistrar implements CompilerRegistrarInterface
      */
     public function hasAttendant(CompilerAttendantInterface $attendant)
     {
-        return (bool) (in_array($attendant, $this->attendantCollection, true));
+        return in_array($attendant, $this->attendantCollection, true);
     }
 
     /**
@@ -103,7 +103,7 @@ abstract class AbstractCompilerRegistrar implements CompilerRegistrarInterface
     protected function isValidAttendant(CompilerAttendantInterface $attendant)
     {
         foreach ($this->interfaceCollection as $interface) {
-            if (false === ($attendant instanceof $interface)) {
+            if (!$attendant instanceof $interface) {
                 return false;
             }
         }
@@ -118,7 +118,7 @@ abstract class AbstractCompilerRegistrar implements CompilerRegistrarInterface
      */
     protected function getNextAttendantPriority($priority = null)
     {
-        return (int) (is_int($priority) ? $priority : count($this->attendantCollection) - 1);
+        return is_int($priority) ? $priority : count($this->attendantCollection) - 1;
     }
 }
 

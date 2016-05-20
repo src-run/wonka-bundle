@@ -10,14 +10,14 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\WonkaBundle\Tests\Component\DependencyInjection\Compiler\Fixture;
+namespace SR\WonkaBundle\Component\HttpKernel\Bundle;
 
-use SR\WonkaBundle\Component\DependencyInjection\Compiler\Registrar\AbstractCompilerRegistrar;
+use Symfony\Component\HttpKernel\Bundle\Bundle as BaseBundle;
 
 /**
- * Class FixtureCompilerRegistrar.
+ * Class Bundle.
  */
-class FixtureCompilerRegistrar extends AbstractCompilerRegistrar
+class Bundle extends BaseBundle
 {
 }
 

@@ -1,35 +1,33 @@
 <?php
 
 /*
- * This file is part of the Wonka Bundle.
+ * This file is part of the `src-run/wonka-bundle` project.
  *
- * (c) Scribe Inc.     <scr@src.run>
  * (c) Rob Frawley 2nd <rmf@src.run>
+ * (c) Scribe Inc      <scr@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-namespace Scribe\WonkaBundle\Component\DependencyInjection;
+namespace SR\WonkaBundle\Component\DependencyInjection;
 
+use SR\Exception\RuntimeException;
+use SR\Utility\ArrayInspect;
+use SR\WonkaBundle\Component\DependencyInjection\Container\ContainerAwareInterface;
+use SR\WonkaBundle\Component\DependencyInjection\Container\ContainerAwareTrait;
+use SR\WonkaBundle\Component\DependencyInjection\Loader\XmlFileLoader;
+use SR\WonkaBundle\Component\DependencyInjection\Loader\YamlFileLoader;
+use SR\WonkaBundle\Utility\Locator\BundleLocator;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Scribe\Wonka\Utility\Arrays;
-use Scribe\Wonka\Utility\ClassInfo;
-use Scribe\Wonka\Utility\Filter\StringFilter;
-use Scribe\Wonka\Exception\RuntimeException;
-use Scribe\WonkaBundle\Component\DependencyInjection\Container\ContainerAwareInterface;
-use Scribe\WonkaBundle\Component\DependencyInjection\Container\ContainerAwareTrait;
-use Scribe\WonkaBundle\Component\DependencyInjection\Loader\XmlFileLoader;
-use Scribe\WonkaBundle\Component\DependencyInjection\Loader\YamlFileLoader;
-use Scribe\WonkaBundle\Utility\Locator\BundleLocator;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension as BaseExtension;
 
 /**
- * Class AbstractExtension.
+ * Class Extension.
  */
-abstract class AbstractExtension extends Extension implements ContainerAwareInterface
+class Extension extends BaseExtension implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
 
@@ -89,8 +87,7 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
      */
     protected function setIndexPrefix($prefix)
     {
-        StringFilter::isLongerThan($prefix, 0);
-        $this->indexPrefix = (string) $prefix;
+        $this->indexPrefix = (string)$prefix;
 
         return $this;
     }
@@ -102,7 +99,7 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
      */
     protected function getIndexPrefix()
     {
-        return (string) $this->indexPrefix;
+        return (string)$this->indexPrefix;
     }
 
     /**
@@ -114,8 +111,7 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
      */
     protected function setIndexSeparator($separator)
     {
-        StringFilter::isLongerThan($separator, 0);
-        $this->indexSeparator = (string) $separator;
+        $this->indexSeparator = (string)$separator;
 
         return $this;
     }
@@ -127,7 +123,7 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
      */
     protected function getIndexSeparator()
     {
-        return (string) $this->indexSeparator;
+        return (string)$this->indexSeparator;
     }
 
     /**
@@ -135,14 +131,9 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
      */
     protected function getNamespaceAndVendorAndBundleName()
     {
-        $caller = get_called_class();
+        $caller = get_class($this);
 
-        if (isNullOrEmpty($namespace = implode('\\', ClassInfo::getNamespaceSet($caller)))) {
-            throw new RuntimeException('Unable to automatically determine vendor/bundle for extension.');
-        }
-
-        list($vendor, $bundle) = BundleLocator::bundlePartsFromNamespace($caller);
-        $vendor = $vendor === 'scribe' ? 's' : $vendor;
+        list($namespace, $vendor, $bundle) = BundleLocator::getContextFromNamespace($caller);
 
         return [$namespace, $vendor, $bundle];
     }
@@ -150,7 +141,7 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
     /**
      * Loads the configuration (builds the container).
      *
-     * @param array            $configs   collection of configs to load
+     * @param array $configs collection of configs to load
      * @param ContainerBuilder $container symfony config container
      *
      * @return $this
@@ -158,9 +149,9 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
     public function load(array $configs, ContainerBuilder $container)
     {
         list($namespace, $vendor, $bundle) = $this->getNamespaceAndVendorAndBundleName();
-        $configurationClassName = '\\'.$namespace.'\\Configuration';
+        $configQualified = sprintf('%s\DependencyInjection\Configuration', $namespace);
 
-        $this->autoLoad($configs, $container, new $configurationClassName(), $vendor.'.'.$bundle);
+        $this->autoLoad($configs, $container, new $configQualified(), $vendor.'.'.$bundle);
 
         return $this;
     }
@@ -170,8 +161,8 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
      * - {@see \Symfony/Component/Config/Definition/Builder/ArrayNodeDefinition::canBeDisabled()})
      * - {@see \Symfony/Component/Config/Definition/Builder/ArrayNodeDefinition::canBeEnabled()})
      * Extend your bundle extension class from the following implementations to handle automatically:
-     * - {@see \Scribe\WonkaBundle\Component\DependencyInjection\AbstractEnableableExtension}
-     * - {@see \Scribe\WonkaBundle\Component\DependencyInjection\AbstractDisableableExtension}.
+     * - {@see \SR\WonkaBundle\Component\DependencyInjection\EnableableExtension}
+     * - {@see \SR\WonkaBundle\Component\DependencyInjection\DisableableExtension}.
      *
      * @param array|null $configSet
      *
@@ -186,15 +177,19 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
      * Helper method to be called from load method ({@see load}) that automate the tedious task of parsing the config
      * tree to container parameter as well as loading any required service definition files.
      *
-     * @param array                  $configSet
-     * @param ContainerBuilder       $container
+     * @param array $configSet
+     * @param ContainerBuilder $container
      * @param ConfigurationInterface $configuration
-     * @param string|null            $prefix
+     * @param string|null $prefix
      *
      * @return $this
      */
-    final protected function autoLoad(array $configSet, ContainerBuilder $container, ConfigurationInterface $configuration, $prefix = null)
-    {
+    final protected function autoLoad(
+        array $configSet,
+        ContainerBuilder $container,
+        ConfigurationInterface $configuration,
+        $prefix = null
+    ) {
         $this->setContainer($container);
         $this->autoLoadConfiguration($configSet, $configuration, $prefix);
         $this->autoLoadServices($container, $configSet);
@@ -206,9 +201,9 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
      * Process the configuration and then load the resulting multi-dimensional {@see $configs} array to useful container
      * parameter indexes with their respective values set.
      *
-     * @param array                  $configSet
+     * @param array $configSet
      * @param ConfigurationInterface $configuration
-     * @param string|null            $prefix
+     * @param string|null $prefix
      *
      * @return $this
      */
@@ -227,11 +222,11 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
      * Load all the services by iterating over the {@see $this->serviceFiles} defined at runtime; Yaml or XML based.
      *
      * @param ContainerBuilder $container
-     * @param array|null       $configSet
+     * @param array|null $config
      *
      * @return $this
      */
-    protected function autoLoadServices(ContainerBuilder $container, array $configSet = null)
+    protected function autoLoadServices(ContainerBuilder $container, array $config = null)
     {
         $resolvedDirectory = $this->resolveBundleDirectory($container);
 
@@ -261,12 +256,12 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
         $resources = $container->getResources();
 
         if (true === (count($resources) > 0)) {
-            $bundleFilePath = (string) current($resources);
+            $bundleFilePath = (string)current($resources);
 
-            return (string) dirname($bundleFilePath);
+            return (string)dirname($bundleFilePath);
         }
 
-        return (string) __DIR__;
+        return (string)__DIR__;
     }
 
     /**
@@ -285,16 +280,18 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
             case 'yml':
             case 'yaml':
                 return new YamlFileLoader();
-            default:
-                throw new RuntimeException('No available service file loader for %s file with %s extension type.', $file, pathinfo($file, PATHINFO_EXTENSION));
         }
+
+        throw RuntimeException::create()
+            ->setMessage('No available service file loader for %s file with %s extension type.')
+            ->with($file, pathinfo($file, PATHINFO_EXTENSION));
     }
 
     /**
      * Process config array to container parameter key=>values.
      *
-     * @param array      $configSet
-     * @param string     $currentId
+     * @param array $configSet
+     * @param string $currentId
      * @param false|bool $parseEmptyValueSet
      *
      * @return $this
@@ -302,7 +299,10 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
     protected function processConfigsToParameters(array $configSet = [], $currentId = null, $parseEmptyValueSet = true)
     {
         if (true === (count($configSet) === 0)) {
-            return $parseEmptyValueSet === true ? $this->handleConfigsToParameterWhenEmpty($currentId, $configSet) : $this;
+            return $parseEmptyValueSet === true ? $this->handleConfigsToParameterWhenEmpty(
+                $currentId,
+                $configSet
+            ) : $this;
         }
 
         foreach ($configSet as $id => $value) {
@@ -324,7 +324,7 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
      * @param string $prefixedId
      * @param string $noPrefixId
      * @param string $currentId
-     * @param mixed  $value
+     * @param mixed $value
      *
      * @return $this
      */
@@ -334,7 +334,7 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
             return $this->handleConfigsToParameterWhenArrayHash($prefixedId, $value, '_list');
         }
 
-        if (false === Arrays::isHash($value, false)) {
+        if (false === ArrayInspect::isAssociative($value, false)) {
             return $this->handleConfigsToParameterWhenArrayInt($prefixedId, $value);
         }
 
@@ -347,17 +347,17 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
      * Set or update a parameter when its value is an integer array.
      *
      * @param string $id
-     * @param mixed  $value
+     * @param mixed $value
      *
      * @return $this
      */
     public function handleConfigsToParameterWhenArrayInt($id, $value)
     {
         if (true === $this->hasContainerParameter($id)) {
-            $value = array_merge((array) $this->getContainerParameter($id), (array) $value);
+            $value = array_merge((array)$this->getContainerParameter($id), (array)$value);
         }
 
-        $this->setContainerParameter($id, (array) $value);
+        $this->setContainerParameter($id, (array)$value);
 
         return $this;
     }
@@ -366,7 +366,7 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
      * Set a new parameter within the container when it is an array hash.
      *
      * @param string $id
-     * @param mixed  $value
+     * @param mixed $value
      * @param string $search
      * @param string $replace
      *
@@ -383,7 +383,7 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
      * Set a new parameter within the container when it is a flat value (non-array).
      *
      * @param string $id
-     * @param mixed  $value
+     * @param mixed $value
      *
      * @return $this
      */
@@ -398,13 +398,16 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
      * Set a new parameter within the container when it contains an empty value/array/etc as a value.
      *
      * @param string|array $indexPartSet
-     * @param mixed        $value
+     * @param mixed $value
      *
      * @return $this
      */
     public function handleConfigsToParameterWhenEmpty($indexPartSet = [], $value)
     {
-        $this->setContainerParameter($this->buildConfigParameterIndex($indexPartSet), $this->normalizeConfigParameterValue($value));
+        $this->setContainerParameter(
+            $this->buildConfigParameterIndex($indexPartSet),
+            $this->normalizeConfigParameterValue($value)
+        );
 
         return $this;
     }
@@ -413,7 +416,7 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
      * Set a new parameter within the container using its completed parameter ID and respective value.
      *
      * @param string $id
-     * @param mixed  $value
+     * @param mixed $value
      *
      * @return $this
      */
@@ -427,14 +430,14 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
     /**
      * Builds a final index parameter by concatenated the configured prefix, separator, and index set created.
      *
-     * @param string,... $indexPartSet
+     * @param string ,... $indexPartSet
      *
      * @return string
      */
     private function buildConfigParameterIndex(...$indexPartSet)
     {
-        return (string) $this->normalizeConfigParameterIndex(
-            $this->getIndexPrefix().$this->indexSeparator.implode($this->indexSeparator, (array) $indexPartSet)
+        return (string)$this->normalizeConfigParameterIndex(
+            $this->getIndexPrefix().$this->indexSeparator.implode($this->indexSeparator, (array)$indexPartSet)
         );
     }
 
@@ -460,7 +463,7 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
         ];
 
         foreach ($normalizationRegexSet as $regex => $replace) {
-            $resolvedIndexValue = (string) preg_replace($regex, $replace, $resolvedIndexValue);
+            $resolvedIndexValue = (string)preg_replace($regex, $replace, $resolvedIndexValue);
         }
 
         if (false === stripos($validFirstChar, $resolvedIndexValue[0])) {
@@ -469,7 +472,7 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
                 ->with($resolvedIndexValue);
         }
 
-        return (string) $resolvedIndexValue;
+        return (string)$resolvedIndexValue;
     }
 
     /**
@@ -483,7 +486,7 @@ abstract class AbstractExtension extends Extension implements ContainerAwareInte
     private function normalizeConfigParameterValue($value)
     {
         if (is_string($value)) {
-            return (string) trim($value);
+            return (string)trim($value);
         }
 
         return $value;

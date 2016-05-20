@@ -1,19 +1,19 @@
 <?php
 
 /*
- * This file is part of the Wonka Bundle.
+ * This file is part of the `src-run/wonka-bundle` project.
  *
- * (c) Scribe Inc.     <scr@src.run>
  * (c) Rob Frawley 2nd <rmf@src.run>
+ * (c) Scribe Inc      <scr@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-namespace Scribe\WonkaBundle\Tests\Utility\Config;
+namespace SR\WonkaBundle\Tests\Utility\Config;
 
-use Scribe\WonkaBundle\Utility\TestCase\KernelTestCase;
-use Scribe\WonkaBundle\Utility\Config\ConfigContainer;
+use SR\WonkaBundle\Utility\TestCase\KernelTestCase;
+use SR\WonkaBundle\Utility\Config\ConfigContainer;
 
 class ConfigContainerTest extends KernelTestCase
 {
@@ -37,7 +37,7 @@ class ConfigContainerTest extends KernelTestCase
     public function testGetParameter()
     {
         static::assertSame(
-            'Scribe\Wonka\Utility\Logger\InvokableLogger',
+            'SR\Wonka\Utility\Logger\InvokableLogger',
             $this->config->get('s.wonka.invokable_logger.class')
         );
     }
@@ -46,7 +46,7 @@ class ConfigContainerTest extends KernelTestCase
     {
         static::assertFalse($this->config->has('s.avcdefghijklmnopqrstuvwxyz0123456789'));
         static::assertNotEquals(
-            'Scribe\Wonka\Utility\Logger\InvokableLogger',
+            'SR\Wonka\Utility\Logger\InvokableLogger',
             $this->config->get('s.avcdefghijklmnopqrstuvwxyz0123456789')
         );
         static::assertNull($this->config->get('s.avcdefghijklmnopqrstuvwxyz0123456789'));

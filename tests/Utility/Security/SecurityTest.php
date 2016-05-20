@@ -1,19 +1,19 @@
 <?php
 
 /*
- * This file is part of the Wonka Bundle.
+ * This file is part of the `src-run/wonka-bundle` project.
  *
- * (c) Scribe Inc.     <scr@src.run>
  * (c) Rob Frawley 2nd <rmf@src.run>
+ * (c) Scribe Inc      <scr@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-namespace Scribe\WonkaBundle\Tests\Utility\Security;
+namespace SR\WonkaBundle\Tests\Utility\Security;
 
-use Scribe\WonkaBundle\Utility\Security\Security;
-use Scribe\WonkaBundle\Utility\TestCase\WonkaTestCase;
+use SR\WonkaBundle\Utility\Security\Security;
+use SR\WonkaBundle\Utility\TestCase\WonkaTestCase;
 
 class SecurityTest extends WonkaTestCase
 {
@@ -26,7 +26,7 @@ class SecurityTest extends WonkaTestCase
 
     public function testRandomPasswordExceptionTooShort()
     {
-        $this->setExpectedException('Scribe\Wonka\Exception\RuntimeException');
+        $this->setExpectedException('SR\Exception\RuntimeException');
         Security::getRandomPassword(7);
     }
 
@@ -55,7 +55,7 @@ class SecurityTest extends WonkaTestCase
 
     public function testIsSecurePasswordException()
     {
-        $this->setExpectedException('Scribe\Wonka\Exception\RuntimeException');
+        $this->setExpectedException('SR\Exception\RuntimeException');
         Security::isSecurePassword('nope', '', true);
     }
 
@@ -91,7 +91,7 @@ class SecurityTest extends WonkaTestCase
 
     public function testRandomBytesExceptionInvalidLength()
     {
-        $this->setExpectedException('Scribe\Wonka\Exception\RuntimeException');
+        $this->setExpectedException('SR\Exception\RuntimeException');
 
         Security::getRandomBytes(0);
     }

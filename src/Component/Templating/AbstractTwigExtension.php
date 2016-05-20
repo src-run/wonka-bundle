@@ -1,19 +1,19 @@
 <?php
 
 /*
- * This file is part of the Wonka Bundle.
+ * This file is part of the `src-run/wonka-bundle` project.
  *
- * (c) Scribe Inc.     <scr@src.run>
  * (c) Rob Frawley 2nd <rmf@src.run>
+ * (c) Scribe Inc      <scr@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-namespace Scribe\WonkaBundle\Component\Templating;
+namespace SR\WonkaBundle\Component\Templating;
 
-use Scribe\Wonka\Exception\RuntimeException;
-use Scribe\Wonka\Utility\ClassInfo;
+use SR\Exception\RuntimeException;
+use SR\Utility\ClassInspect;
 
 /**
  * Class AbstractTwigExtension.
@@ -81,10 +81,7 @@ abstract class AbstractTwigExtension extends \Twig_Extension implements TwigExte
      */
     final public function getName()
     {
-        return strtolower(sprintf(
-            'twig_ext_%s',
-            ClassInfo::getClassNameByInstance($this)
-        ));
+        return strtolower(sprintf('twig_ext_%s', ClassInspect::nameUnQualified($this)));
     }
 
     /**

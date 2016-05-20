@@ -1,18 +1,18 @@
 <?php
 
 /*
- * This file is part of the Wonka Bundle.
+ * This file is part of the `src-run/wonka-bundle` project.
  *
- * (c) Scribe Inc.     <scr@src.run>
  * (c) Rob Frawley 2nd <rmf@src.run>
+ * (c) Scribe Inc      <scr@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-namespace Scribe\WonkaBundle\Tests\Component\DependencyInjection\Compiler\Fixture;
+namespace SR\WonkaBundle\Tests\Component\DependencyInjection\Compiler\Fixture;
 
-use Scribe\WonkaBundle\Component\DependencyInjection\Compiler\Pass\AbstractCompilerPass;
+use SR\WonkaBundle\Component\DependencyInjection\Compiler\Pass\AbstractCompilerPass;
 
 /**
  * Class FixtureCompilerAwareBundle.
@@ -24,7 +24,7 @@ class FixtureCompilerAwareBundle extends AbstractCompilerPass
      *
      * @return string
      */
-    public function getRegistrarSrvName()
+    public function getRegistrarService()
     {
         return 'srv.name';
     }

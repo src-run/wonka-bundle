@@ -1,16 +1,16 @@
 <?php
 
 /*
- * This file is part of the Wonka Bundle.
+ * This file is part of the `src-run/wonka-bundle` project.
  *
- * (c) Scribe Inc.     <scr@src.run>
  * (c) Rob Frawley 2nd <rmf@src.run>
+ * (c) Scribe Inc      <scr@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-namespace Scribe\WonkaBundle\Component\DependencyInjection\Compiler\Pass;
+namespace SR\WonkaBundle\Component\DependencyInjection\Compiler\Pass;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface as BaseCompilerPassInterface;
 
@@ -19,14 +19,12 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface as Base
  */
 interface CompilerPassInterface extends BaseCompilerPassInterface
 {
-    const REGISTRAR_ADD_ATTENDANT_METHOD_NAME = 'addAttendant';
-
     /**
      * Return the name of the service that handles the collection of tagged items found (the chain manager).
      *
      * @return string
      */
-    public function getRegistrarSrvName();
+    public function getRegistrarService();
 
     /**
      * Return the name of the search tag to find services to be attached to the chain (the chain subscribers).
@@ -39,11 +37,6 @@ interface CompilerPassInterface extends BaseCompilerPassInterface
      * @return string
      */
     public function getRegistrarAddAttendantMethodName();
-
-    /**
-     * @param string $methodName\
-     */
-    public function setRegistrarAddAttendantMethodName($methodName);
 }
 
 /* EOF */

@@ -1,16 +1,16 @@
 <?php
 
 /*
- * This file is part of the Wonka Bundle.
+ * This file is part of the `src-run/wonka-bundle` project.
  *
- * (c) Scribe Inc.     <scr@src.run>
  * (c) Rob Frawley 2nd <rmf@src.run>
+ * (c) Scribe Inc      <scr@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-namespace Scribe\WonkaBundle\Component\DependencyInjection\Aware;
+namespace SR\WonkaBundle\Component\DependencyInjection\Aware;
 
 use Symfony\Component\Stopwatch\StopwatchEvent;
 
@@ -33,7 +33,7 @@ trait StopwatchActionsAwareTrait
      */
     protected function stopwatchOpenSection($id = null)
     {
-        if (true === $this->hasStopwatch()) {
+        if ($this->hasStopwatch()) {
             $this->stopwatch->openSection($id);
         }
 
@@ -47,7 +47,7 @@ trait StopwatchActionsAwareTrait
      */
     protected function stopwatchStopSection($id)
     {
-        if (true === $this->hasStopwatch()) {
+        if ($this->hasStopwatch()) {
             $this->stopwatch->stopSection($id);
         }
 
@@ -62,11 +62,8 @@ trait StopwatchActionsAwareTrait
      */
     protected function stopwatchStart($name, $category = null)
     {
-        if (true === $this->hasStopwatch()) {
-            $this->stopwatchEventSetAdd(
-                $name,
-                $this->stopwatch->start($name, $category)
-            );
+        if ($this->hasStopwatch()) {
+            $this->stopwatchEventSetAdd($name, $this->stopwatch->start($name, $category));
         }
 
         return $this;
@@ -79,11 +76,8 @@ trait StopwatchActionsAwareTrait
      */
     protected function stopwatchStop($name)
     {
-        if (true === $this->hasStopwatch()) {
-            $this->stopwatchEventSetAdd(
-                $name,
-                $this->stopwatch->stop($name)
-            );
+        if ($this->hasStopwatch()) {
+            $this->stopwatchEventSetAdd($name, $this->stopwatch->stop($name));
         }
 
         return $this;
@@ -96,11 +90,8 @@ trait StopwatchActionsAwareTrait
      */
     protected function stopwatchLap($name)
     {
-        if (true === $this->hasStopwatch()) {
-            $this->stopwatchEventSetAdd(
-                $name,
-                $this->stopwatch->lap($name)
-            );
+        if ($this->hasStopwatch()) {
+            $this->stopwatchEventSetAdd($name, $this->stopwatch->lap($name));
         }
 
         return $this;
@@ -113,8 +104,8 @@ trait StopwatchActionsAwareTrait
      */
     protected function isStopwatchStarted($name)
     {
-        if (true === $this->hasStopwatch()) {
-            return (bool) $this->stopwatch->isStarted($name);
+        if ($this->hasStopwatch()) {
+            return $this->stopwatch->isStarted($name);
         }
 
         return false;
@@ -126,7 +117,7 @@ trait StopwatchActionsAwareTrait
      */
     protected function stopwatchEventSetAdd($name, StopwatchEvent $event)
     {
-        if (false === array_key_exists($name, (array) $this->stopwatchEventSet)) {
+        if (!array_key_exists($name, (array) $this->stopwatchEventSet)) {
             $this->stopwatchEventSet[$name] = [];
         }
 
@@ -140,7 +131,8 @@ trait StopwatchActionsAwareTrait
      */
     protected function hasStopwatchEventSet($name)
     {
-        return (bool) (true === array_key_exists($name, $this->stopwatchEventSet) && true === (count($this->stopwatchEventSet[$name]) > 0));
+        return array_key_exists($name, $this->stopwatchEventSet) &&
+               count($this->stopwatchEventSet[$name]) > 0;
     }
 
     /**
@@ -150,7 +142,7 @@ trait StopwatchActionsAwareTrait
      */
     protected function getStopwatchEventSet($name)
     {
-        if (true === $this->hasStopwatchEventSet($name)) {
+        if ($this->hasStopwatchEventSet($name)) {
             return $this->stopwatchEventSet[$name];
         }
 
@@ -164,7 +156,7 @@ trait StopwatchActionsAwareTrait
      */
     protected function getStopwatchEventLast($name)
     {
-        if (true === $this->hasStopwatchEventSet($name)) {
+        if ($this->hasStopwatchEventSet($name)) {
             return getLastArrayElement($this->stopwatchEventSet[$name]);
         }
 
@@ -178,7 +170,7 @@ trait StopwatchActionsAwareTrait
      */
     protected function getStopwatchSectionEvents($id)
     {
-        if (true === $this->hasStopwatch()) {
+        if ($this->hasStopwatch()) {
             return $this->stopwatch->getSectionEvents($id);
         }
 

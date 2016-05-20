@@ -1,18 +1,20 @@
 <?php
 
 /*
- * This file is part of the Wonka Bundle.
+ * This file is part of the `src-run/wonka-bundle` project.
  *
- * (c) Scribe Inc.     <scr@src.run>
  * (c) Rob Frawley 2nd <rmf@src.run>
+ * (c) Scribe Inc      <scr@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-namespace Scribe\WonkaBundle\Utility\Locator;
+namespace SR\WonkaBundle\Utility\Locator;
 
-use Scribe\Wonka\Utility\StaticClass\StaticClassTrait;
+use SR\Utility\ClassInspect;
+use SR\Utility\StringTransform;
+use SR\Wonka\Utility\StaticClass\StaticClassTrait;
 
 /**
  * Class BundleLocator.
@@ -26,39 +28,104 @@ class BundleLocator
      *
      * @return array[]
      */
-    public static function bundlePartsFromNamespace($namespace)
+    public static function getContextFromNamespace($namespace)
     {
-        $normalize = function ($v) {
-            if (substr($v, -6) === 'Bundle') {
-                $v = substr($v, 0, strlen($v) - 6);
+        list($nameRoot, $nameSections) = self::parseNamespaceContext($namespace);
+
+        $namespaceSections = [];
+
+        foreach (self::getNamespaceSections($namespace) as $section) {
+            $namespaceSections[] = $section;
+
+            if (1 === preg_match('{Bundle$}', $section)) {
+                break;
             }
-
-            return strtolower(preg_replace('#(?<=\\w)(?=[A-Z])#', '_$1', $v));
-        };
-
-        $fqcnParts = explode('\\', $namespace);
-
-        if (isIterableEmpty($fqcnParts) || !(count($fqcnParts) >= 2)) {
-            return [null, null];
         }
 
-        $bundleRoot = $normalize(array_shift($fqcnParts));
+        return ['\\'.implode('\\', array_merge($namespaceSections)), $nameRoot, self::generateBundleName($nameSections)];
+    }
 
-        $bundlePart = array_filter($fqcnParts, function ($v) {
-            static $end = false;
+    /**
+     * @param string $namespace
+     *
+     * @return string
+     */
+    public final static function getName($namespace)
+    {
+        list($nameRoot, $nameSections) = self::parseNamespaceContext($namespace);
 
-            if (substr($v, -6) === 'Bundle') {
-                $end = true;
+        return self::generateBundleName($nameSections, $nameRoot);
+    }
 
-                return true;
+    /**
+     * @param string $namespace
+     *
+     * @return string[]|array[]
+     */
+    private final static function parseNamespaceContext($namespace)
+    {
+        $sections = self::getNamespaceSections(self::normalizeSequentialUpperChars($namespace));
+
+        if (ClassInspect::isClass($namespace)) {
+            array_pop($sections);
+        }
+
+        $root = array_shift($sections);
+        $root = StringTransform::pascalToSnakeCase($root);
+
+        return [$root, $sections];
+    }
+
+    /**
+     * @param string[]    $sections
+     * @param null|string $rootName
+     *
+     * @return string
+     */
+    private final static function generateBundleName(array $sections, $nameRoot = null)
+    {
+        $nameSections = [];
+
+        for ($i = 0; $i < count($sections); $i++) {
+            $nameSections[] = StringTransform::pascalToSnakeCase($sections[$i]);
+
+            if (substr($sections[$i], -6) === 'Bundle') {
+                break;
             }
+        }
 
-            return !$end;
-        });
+        if ($nameRoot !== null) {
+            $nameSections = array_merge((array)$nameRoot, $nameSections);
+        }
 
-        $bundlePart = array_map($normalize, $bundlePart);
+        return implode('_', $nameSections);
+    }
 
-        return [$bundleRoot, implode('_', $bundlePart)];
+    /**
+     * @param string $namespace
+     *
+     * @return string
+     */
+    private final static function normalizeSequentialUpperChars($namespace)
+    {
+        return preg_replace_callback(
+            '{([A-Z][A-Z]+)(\\\\)}',
+            function ($matches) {
+                return strtolower($matches[1]).'\\';
+            },
+            $namespace
+        );
+    }
+
+    protected final static function getNamespaceSections($namespace, $includesClass = false)
+    {
+        $parts = explode('\\', $namespace);
+
+        if ($includesClass) {
+            var_dump([__METHOD__, array_pop($parts)]);
+        }
+
+        return $parts;
     }
 }
 

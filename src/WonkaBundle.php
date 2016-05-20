@@ -10,14 +10,14 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\WonkaBundle\Tests\Component\DependencyInjection\Compiler\Fixture;
+namespace SR\WonkaBundle;
 
-use SR\WonkaBundle\Component\DependencyInjection\Compiler\Registrar\AbstractCompilerRegistrar;
+use SR\WonkaBundle\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Class FixtureCompilerRegistrar.
+ * Class WonkaBundle.
  */
-class FixtureCompilerRegistrar extends AbstractCompilerRegistrar
+class WonkaBundle extends Bundle
 {
 }
 
