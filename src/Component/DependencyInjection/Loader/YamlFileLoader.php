@@ -23,6 +23,33 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader as BaseYamlFileL
 class YamlFileLoader extends BaseYamlFileLoader
 {
     /**
+     * @var string[]
+     */
+    protected static $keywords = array(
+        'alias' => 'alias',
+        'parent' => 'parent',
+        'class' => 'class',
+        'shared' => 'shared',
+        'synthetic' => 'synthetic',
+        'lazy' => 'lazy',
+        'public' => 'public',
+        'abstract' => 'abstract',
+        'deprecated' => 'deprecated',
+        'factory' => 'factory',
+        'file' => 'file',
+        'arguments' => 'arguments',
+        'properties' => 'properties',
+        'configurator' => 'configurator',
+        'calls' => 'calls',
+        'tags' => 'tags',
+        'decorates' => 'decorates',
+        'decoration_inner_name' => 'decoration_inner_name',
+        'decoration_priority' => 'decoration_priority',
+        'autowire' => 'autowire',
+        'autowiring_types' => 'autowiring_types',
+    );
+
+    /**
      * Overwrite the default constructor behaviour to do nothing, so we can defer
      * setup until the user explicitly calls {@see setup}.
      */
