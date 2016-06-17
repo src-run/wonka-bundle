@@ -13,7 +13,7 @@
 namespace SR\WonkaBundle\Component\DependencyInjection;
 
 use SR\WonkaBundle\Component\DependencyInjection\Builder\NodeBuilderManager;
-use SR\WonkaBundle\Utility\Locator\BundleLocator;
+use SR\WonkaBundle\Component\HttpKernel\Bundle\BundleInspect;
 use SR\WonkaBundle\Component\DependencyInjection\Builder\TreeBuilderManager;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
@@ -54,11 +54,7 @@ class AbstractConfiguration implements ConfigurationInterface
      */
     protected function getRootName()
     {
-        var_dump([
-            __METHOD__,
-            BundleLocator::getName(get_called_class()),
-        ]);
-        return BundleLocator::getName(get_called_class());
+        return BundleInspect::getName(get_called_class());
     }
 
     /**

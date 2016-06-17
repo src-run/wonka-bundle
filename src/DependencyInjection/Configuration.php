@@ -17,7 +17,7 @@ use SR\WonkaBundle\Component\DependencyInjection\AbstractConfiguration;
 /**
  * Class Configuration.
  */
-class Configuration extends Configuration
+class Configuration extends AbstractConfiguration
 {
 }
 

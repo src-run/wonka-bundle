@@ -18,7 +18,7 @@ use SR\WonkaBundle\Component\DependencyInjection\Container\ContainerAwareInterfa
 use SR\WonkaBundle\Component\DependencyInjection\Container\ContainerAwareTrait;
 use SR\WonkaBundle\Component\DependencyInjection\Loader\XmlFileLoader;
 use SR\WonkaBundle\Component\DependencyInjection\Loader\YamlFileLoader;
-use SR\WonkaBundle\Utility\Locator\BundleLocator;
+use SR\WonkaBundle\Component\HttpKernel\Bundle\BundleInspect;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -133,7 +133,7 @@ class Extension extends BaseExtension implements ContainerAwareInterface
     {
         $caller = get_class($this);
 
-        list($namespace, $vendor, $bundle) = BundleLocator::getContextFromNamespace($caller);
+        list($namespace, $vendor, $bundle) = BundleInspect::getContextFromNamespace($caller);
 
         return [$namespace, $vendor, $bundle];
     }

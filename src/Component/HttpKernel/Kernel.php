@@ -78,8 +78,6 @@ class Kernel extends BaseKernel
             $resolved[] = new $bundle();
         }
 
-        var_dump($resolved);
-
         return $resolved;
     }
 
