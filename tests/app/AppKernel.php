@@ -17,8 +17,6 @@ use SR\WonkaBundle\Component\HttpKernel\Kernel;
  */
 class AppKernel extends Kernel
 {
-    /**
-     */
     public function setup()
     {
         $this->register('\Symfony\Bundle\MonologBundle\MonologBundle');

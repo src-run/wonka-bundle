@@ -78,7 +78,7 @@ abstract class AbstractCompilerRegistrar implements CompilerRegistrarInterface
     public function addAttendant(CompilerAttendantInterface $attendant, $priority = null, $extra = [])
     {
         if ($this->isValidAttendant($attendant)) {
-            $this->attendantCollection[ $this->getNextAttendantPriority($priority) ] = $attendant;
+            $this->attendantCollection[$this->getNextAttendantPriority($priority)] = $attendant;
             ksort($this->attendantCollection);
         }
 

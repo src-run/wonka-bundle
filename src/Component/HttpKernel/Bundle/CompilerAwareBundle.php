@@ -12,7 +12,6 @@
 
 namespace SR\WonkaBundle\Component\HttpKernel\Bundle;
 
-use SR\Exception\RuntimeException;
 use SR\WonkaBundle\Component\DependencyInjection\Compiler\Pass\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 

@@ -87,7 +87,7 @@ class Extension extends BaseExtension implements ContainerAwareInterface
      */
     protected function setIndexPrefix($prefix)
     {
-        $this->indexPrefix = (string)$prefix;
+        $this->indexPrefix = (string) $prefix;
 
         return $this;
     }
@@ -99,7 +99,7 @@ class Extension extends BaseExtension implements ContainerAwareInterface
      */
     protected function getIndexPrefix()
     {
-        return (string)$this->indexPrefix;
+        return (string) $this->indexPrefix;
     }
 
     /**
@@ -111,7 +111,7 @@ class Extension extends BaseExtension implements ContainerAwareInterface
      */
     protected function setIndexSeparator($separator)
     {
-        $this->indexSeparator = (string)$separator;
+        $this->indexSeparator = (string) $separator;
 
         return $this;
     }
@@ -123,7 +123,7 @@ class Extension extends BaseExtension implements ContainerAwareInterface
      */
     protected function getIndexSeparator()
     {
-        return (string)$this->indexSeparator;
+        return (string) $this->indexSeparator;
     }
 
     /**
@@ -141,7 +141,7 @@ class Extension extends BaseExtension implements ContainerAwareInterface
     /**
      * Loads the configuration (builds the container).
      *
-     * @param array $configs collection of configs to load
+     * @param array            $configs   collection of configs to load
      * @param ContainerBuilder $container symfony config container
      *
      * @return $this
@@ -177,10 +177,10 @@ class Extension extends BaseExtension implements ContainerAwareInterface
      * Helper method to be called from load method ({@see load}) that automate the tedious task of parsing the config
      * tree to container parameter as well as loading any required service definition files.
      *
-     * @param array $configSet
-     * @param ContainerBuilder $container
+     * @param array                  $configSet
+     * @param ContainerBuilder       $container
      * @param ConfigurationInterface $configuration
-     * @param string|null $prefix
+     * @param string|null            $prefix
      *
      * @return $this
      */
@@ -201,9 +201,9 @@ class Extension extends BaseExtension implements ContainerAwareInterface
      * Process the configuration and then load the resulting multi-dimensional {@see $configs} array to useful container
      * parameter indexes with their respective values set.
      *
-     * @param array $configSet
+     * @param array                  $configSet
      * @param ConfigurationInterface $configuration
-     * @param string|null $prefix
+     * @param string|null            $prefix
      *
      * @return $this
      */
@@ -222,7 +222,7 @@ class Extension extends BaseExtension implements ContainerAwareInterface
      * Load all the services by iterating over the {@see $this->serviceFiles} defined at runtime; Yaml or XML based.
      *
      * @param ContainerBuilder $container
-     * @param array|null $config
+     * @param array|null       $config
      *
      * @return $this
      */
@@ -256,12 +256,12 @@ class Extension extends BaseExtension implements ContainerAwareInterface
         $resources = $container->getResources();
 
         if (true === (count($resources) > 0)) {
-            $bundleFilePath = (string)current($resources);
+            $bundleFilePath = (string) current($resources);
 
-            return (string)dirname($bundleFilePath);
+            return (string) dirname($bundleFilePath);
         }
 
-        return (string)__DIR__;
+        return (string) __DIR__;
     }
 
     /**
@@ -290,8 +290,8 @@ class Extension extends BaseExtension implements ContainerAwareInterface
     /**
      * Process config array to container parameter key=>values.
      *
-     * @param array $configSet
-     * @param string $currentId
+     * @param array      $configSet
+     * @param string     $currentId
      * @param false|bool $parseEmptyValueSet
      *
      * @return $this
@@ -324,7 +324,7 @@ class Extension extends BaseExtension implements ContainerAwareInterface
      * @param string $prefixedId
      * @param string $noPrefixId
      * @param string $currentId
-     * @param mixed $value
+     * @param mixed  $value
      *
      * @return $this
      */
@@ -347,17 +347,17 @@ class Extension extends BaseExtension implements ContainerAwareInterface
      * Set or update a parameter when its value is an integer array.
      *
      * @param string $id
-     * @param mixed $value
+     * @param mixed  $value
      *
      * @return $this
      */
     public function handleConfigsToParameterWhenArrayInt($id, $value)
     {
         if (true === $this->hasContainerParameter($id)) {
-            $value = array_merge((array)$this->getContainerParameter($id), (array)$value);
+            $value = array_merge((array) $this->getContainerParameter($id), (array) $value);
         }
 
-        $this->setContainerParameter($id, (array)$value);
+        $this->setContainerParameter($id, (array) $value);
 
         return $this;
     }
@@ -366,7 +366,7 @@ class Extension extends BaseExtension implements ContainerAwareInterface
      * Set a new parameter within the container when it is an array hash.
      *
      * @param string $id
-     * @param mixed $value
+     * @param mixed  $value
      * @param string $search
      * @param string $replace
      *
@@ -383,7 +383,7 @@ class Extension extends BaseExtension implements ContainerAwareInterface
      * Set a new parameter within the container when it is a flat value (non-array).
      *
      * @param string $id
-     * @param mixed $value
+     * @param mixed  $value
      *
      * @return $this
      */
@@ -398,11 +398,11 @@ class Extension extends BaseExtension implements ContainerAwareInterface
      * Set a new parameter within the container when it contains an empty value/array/etc as a value.
      *
      * @param string|array $indexPartSet
-     * @param mixed $value
+     * @param mixed        $value
      *
      * @return $this
      */
-    public function handleConfigsToParameterWhenEmpty($indexPartSet = [], $value)
+    public function handleConfigsToParameterWhenEmpty($indexPartSet, $value)
     {
         $this->setContainerParameter(
             $this->buildConfigParameterIndex($indexPartSet),
@@ -416,7 +416,7 @@ class Extension extends BaseExtension implements ContainerAwareInterface
      * Set a new parameter within the container using its completed parameter ID and respective value.
      *
      * @param string $id
-     * @param mixed $value
+     * @param mixed  $value
      *
      * @return $this
      */
@@ -436,8 +436,8 @@ class Extension extends BaseExtension implements ContainerAwareInterface
      */
     private function buildConfigParameterIndex(...$indexPartSet)
     {
-        return (string)$this->normalizeConfigParameterIndex(
-            $this->getIndexPrefix().$this->indexSeparator.implode($this->indexSeparator, (array)$indexPartSet)
+        return (string) $this->normalizeConfigParameterIndex(
+            $this->getIndexPrefix().$this->indexSeparator.implode($this->indexSeparator, (array) $indexPartSet)
         );
     }
 
@@ -463,7 +463,7 @@ class Extension extends BaseExtension implements ContainerAwareInterface
         ];
 
         foreach ($normalizationRegexSet as $regex => $replace) {
-            $resolvedIndexValue = (string)preg_replace($regex, $replace, $resolvedIndexValue);
+            $resolvedIndexValue = (string) preg_replace($regex, $replace, $resolvedIndexValue);
         }
 
         if (false === stripos($validFirstChar, $resolvedIndexValue[0])) {
@@ -472,7 +472,7 @@ class Extension extends BaseExtension implements ContainerAwareInterface
                 ->with($resolvedIndexValue);
         }
 
-        return (string)$resolvedIndexValue;
+        return (string) $resolvedIndexValue;
     }
 
     /**
@@ -486,7 +486,7 @@ class Extension extends BaseExtension implements ContainerAwareInterface
     private function normalizeConfigParameterValue($value)
     {
         if (is_string($value)) {
-            return (string)trim($value);
+            return (string) trim($value);
         }
 
         return $value;

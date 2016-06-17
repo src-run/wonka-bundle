@@ -13,7 +13,6 @@
 namespace SR\WonkaBundle\Component\DependencyInjection\Compiler\Attendant;
 
 use SR\Reflection\Inspect;
-use SR\Utility\ClassInspect;
 use SR\Wonka\Utility\Mapper\ParametersToPropertiesMapperTrait;
 
 /**

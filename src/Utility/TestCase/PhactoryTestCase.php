@@ -136,7 +136,7 @@ abstract class PhactoryTestCase extends EntityTestCase
 
                 foreach ($info['assocs'] as $name => $field) {
                     $tableAssocs[$name] = $this->factory->manyToOne($name, $field);
-                };
+                }
 
                 $this->factory->define($type, $data, $tableAssocs);
             } else {

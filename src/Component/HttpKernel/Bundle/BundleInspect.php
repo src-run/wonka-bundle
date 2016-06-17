@@ -25,7 +25,7 @@ class BundleInspect
      *
      * @return mixed[]
      */
-    public final static function getContextFromNamespace($namespace)
+    final public static function getContextFromNamespace($namespace)
     {
         list($root, $sections) = self::parseNamespaceContext($namespace);
 
@@ -49,7 +49,7 @@ class BundleInspect
      *
      * @return string
      */
-    public final static function getName($namespace)
+    final public static function getName($namespace)
     {
         list($root, $sections) = self::parseNamespaceContext($namespace);
 
@@ -61,7 +61,7 @@ class BundleInspect
      *
      * @return string[]|array[]
      */
-    private final static function parseNamespaceContext($namespace)
+    final private static function parseNamespaceContext($namespace)
     {
         $sections = self::getNamespaceSections(
             self::normalizeSequentialUpperChars($namespace));
@@ -81,11 +81,11 @@ class BundleInspect
      *
      * @return string
      */
-    private final static function generateBundleName(array $from, $root = null)
+    final private static function generateBundleName(array $from, $root = null)
     {
         $sections = [];
 
-        for ($i = 0; $i < count($from); $i++) {
+        for ($i = 0; $i < count($from); ++$i) {
             $sections[] = StringTransform::pascalToSnakeCase($from[$i]);
 
             if (1 === preg_match('{Bundle$}', $from[$i])) {
@@ -94,7 +94,7 @@ class BundleInspect
         }
 
         if ($root !== null) {
-            $sections = array_merge((array)$root, $sections);
+            $sections = array_merge((array) $root, $sections);
         }
 
         return implode('_', $sections);
@@ -105,7 +105,7 @@ class BundleInspect
      *
      * @return string
      */
-    private final static function normalizeSequentialUpperChars($namespace)
+    final private static function normalizeSequentialUpperChars($namespace)
     {
         return preg_replace_callback('{([A-Z][A-Z]+)(\\\\)}', function ($matches) {
             return strtolower($matches[1]).'\\';
@@ -118,7 +118,7 @@ class BundleInspect
      *
      * @return array
      */
-    private final static function getNamespaceSections($namespace, $isQualifiedClass = false)
+    final private static function getNamespaceSections($namespace, $isQualifiedClass = false)
     {
         $parts = explode('\\', $namespace);
 

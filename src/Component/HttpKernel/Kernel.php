@@ -12,7 +12,6 @@
 
 namespace SR\WonkaBundle\Component\HttpKernel;
 
-use SR\Reflection\Inspect;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 

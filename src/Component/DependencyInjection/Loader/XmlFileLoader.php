@@ -26,6 +26,7 @@ class XmlFileLoader extends SymfonyXmlFileLoader
      * Overwrite the default constructor behaviour to do nothing, so we can defer
      * setup until the user explicitly calls {@see setup}.
      */
+
     /** @noinspection PhpMissingParentConstructorInspection */
     public function __construct()
     {

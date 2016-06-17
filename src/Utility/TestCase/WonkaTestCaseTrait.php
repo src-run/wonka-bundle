@@ -31,8 +31,6 @@ trait WonkaTestCaseTrait
 
     /**
      * @param string $path
-     * 
-     * @return null
      */
     protected function removeDirectory($path)
     {

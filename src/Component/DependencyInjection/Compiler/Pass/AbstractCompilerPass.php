@@ -60,7 +60,7 @@ abstract class AbstractCompilerPass implements CompilerPassInterface
         $registrar = $container->getDefinition($registrarService);
         $foundAttendants = $container->findTaggedServiceIds($serviceSearchTag);
 
-        if (sizeof($foundAttendants) === 0) {
+        if (count($foundAttendants) === 0) {
             return $this;
         }
 
