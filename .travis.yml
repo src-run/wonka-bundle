@@ -4,26 +4,31 @@
 # This file is part of the `src-run/wonka-bundle` project.
 #
 # (c) Rob Frawley 2nd <rmf@src.run>
-# (c) Scribe Inc      <scr@src.run>
 #
 # For the full copyright and license information, view the LICENSE.md
 # file distributed with this source code.
 ##
 
-sudo     : false
 language : php
 php      : [ 5.6, 7.0 ]
-
-git:
-  depth : 3
+sudo     : false
+git      : { depth : 3 }
 
 env :
   global :
-    - secure: PLntR+Ol5CcyLKvGoxI3TTiX7i/zHidupiFRQdVO1B5Gi/5qxgv4TYbJXvCDvg63xgXBO/TVzE0W2lJkro62oO+syefZ/C/zCiO2oj4kqLQqCr966ikzFwJwrHwyN/ARLXycqifkTqsa1TaPTzizgREdF6I4FfoCdzrdmWOiwufnxCWwF0YaH8dmqGcpCp4u3WxXEOxJURgXEbnrKvOclz/2V40VIhUlh8jiFBh0jWK35IS64/VW4ykOzbTlP+r2VF/GmgWDVe1EzOtySTQ0moj/rIpb2G6abcgj322MrKPJ0Scr/VMURIgvSPgLPjBkPVKMiuGnWoKD+BYzvWhezzl+utMAjDGOQT4NPPVTZu7eU0ZxdbkoRyJXTU3tfvi2s2G7wc4GJZX+P2aEcAIriSZPVodO7yBMWJWjGRaG+WO5msC3KUR4fFpydU2teKTPphmN4qD1CMqk7y4brrP2tc5DsqBj08wIA+U7QtjEs4C+tRHODCBcidPSv71+rcXrinl0JslZvOGeyIQip3zAGAf9Co8eedvL9iS8P3mdgEHg23xrPFpeqT/FzEfHpuUpwjW+pvWC4gnHQzdZTij7DXyl29uGjUYqcoZwg20rN/hAOn9WeOKpPVpMm7udhMyJE16p5zfgacjEHUhrqfajbSdL8sys+rEMTZyGud60k9Q=
+    - secure : PLntR+Ol5CcyLKvGoxI3TTiX7i/zHidupiFRQdVO1B5Gi/5qxgv4TYbJXvCDvg63xgXBO/TVzE0W2lJkro62oO+syefZ/C/zCiO2oj4kqLQqCr966ikzFwJwrHwyN/ARLXycqifkTqsa1TaPTzizgREdF6I4FfoCdzrdmWOiwufnxCWwF0YaH8dmqGcpCp4u3WxXEOxJURgXEbnrKvOclz/2V40VIhUlh8jiFBh0jWK35IS64/VW4ykOzbTlP+r2VF/GmgWDVe1EzOtySTQ0moj/rIpb2G6abcgj322MrKPJ0Scr/VMURIgvSPgLPjBkPVKMiuGnWoKD+BYzvWhezzl+utMAjDGOQT4NPPVTZu7eU0ZxdbkoRyJXTU3tfvi2s2G7wc4GJZX+P2aEcAIriSZPVodO7yBMWJWjGRaG+WO5msC3KUR4fFpydU2teKTPphmN4qD1CMqk7y4brrP2tc5DsqBj08wIA+U7QtjEs4C+tRHODCBcidPSv71+rcXrinl0JslZvOGeyIQip3zAGAf9Co8eedvL9iS8P3mdgEHg23xrPFpeqT/FzEfHpuUpwjW+pvWC4gnHQzdZTij7DXyl29uGjUYqcoZwg20rN/hAOn9WeOKpPVpMm7udhMyJE16p5zfgacjEHUhrqfajbSdL8sys+rEMTZyGud60k9Q=
 
 services :
   - mysql
   - memcached
+
+cache :
+  directories :
+    - $HOME/.composer/cache
+
+notifications :
+    on_success : never
+    on_failure : always
 
 install :
   - bash .bldr/bldr -b up-env -q
