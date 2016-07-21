@@ -12,16 +12,16 @@
 
 namespace SR\WonkaBundle\Tests\Component\DependencyInjection\Compiler\Registrar;
 
-use SR\WonkaBundle\Tests\Component\DependencyInjection\Compiler\Fixture\FixtureCompilerAttendant;
-use SR\WonkaBundle\Tests\Component\DependencyInjection\Compiler\Fixture\FixtureCompilerRegistrar;
-use SR\WonkaBundle\Utility\TestCase\WonkaTestCase;
+use SR\WonkaBundle\Test\KernelTestCase;
+use SR\WonkaBundle\Tests\Component\DependencyInjection\Compiler\Fixtures\FixtureCompilerAttendant;
+use SR\WonkaBundle\Tests\Component\DependencyInjection\Compiler\Fixtures\FixtureCompilerRegistrar;
 
 /**
  * Class CompilerRegistrarTest.
  */
-class CompilerRegistrarTest extends WonkaTestCase
+class CompilerRegistrarTest extends KernelTestCase
 {
-    public function test_simple_attendant_registration()
+    public function testSimpleAttendantRegistration()
     {
         $a0 = new FixtureCompilerAttendant();
         $r0 = new FixtureCompilerRegistrar();
@@ -35,7 +35,7 @@ class CompilerRegistrarTest extends WonkaTestCase
         self::assertTrue($r0->hasAttendant($a0));
     }
 
-    public function test_priority_attendant_registration()
+    public function testPriorityAttendantRegistration()
     {
         $a0 = new FixtureCompilerAttendant();
         $a1 = new FixtureCompilerAttendant();
@@ -73,7 +73,7 @@ class CompilerRegistrarTest extends WonkaTestCase
         self::assertEquals(99, $ak2);
     }
 
-    public function test_iterable_attendant_registration()
+    public function testIterableAttendantRegistration()
     {
         $a0 = new FixtureCompilerAttendant();
         $a1 = new FixtureCompilerAttendant();

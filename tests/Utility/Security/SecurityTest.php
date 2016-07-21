@@ -4,7 +4,6 @@
  * This file is part of the `src-run/wonka-bundle` project.
  *
  * (c) Rob Frawley 2nd <rmf@src.run>
- * (c) Scribe Inc      <scr@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
@@ -12,11 +11,18 @@
 
 namespace SR\WonkaBundle\Tests\Utility\Security;
 
+use SR\WonkaBundle\Test\KernelTestCase;
 use SR\WonkaBundle\Utility\Security\Security;
-use SR\WonkaBundle\Utility\TestCase\WonkaTestCase;
 
-class SecurityTest extends WonkaTestCase
+class SecurityTest extends KernelTestCase
 {
+    public function testGetRandomHash()
+    {
+        $this->setExpectedException('SR\Exception\RuntimeException');
+
+        Security::getRandomHash('hash-not-valid');
+    }
+
     public function testRandomPassword()
     {
         static::assertTrue(Security::isSecurePassword(Security::getRandomPassword(10)));

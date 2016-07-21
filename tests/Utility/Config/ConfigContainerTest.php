@@ -4,7 +4,6 @@
  * This file is part of the `src-run/wonka-bundle` project.
  *
  * (c) Rob Frawley 2nd <rmf@src.run>
- * (c) Scribe Inc      <scr@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
@@ -12,7 +11,7 @@
 
 namespace SR\WonkaBundle\Tests\Utility\Config;
 
-use SR\WonkaBundle\Utility\TestCase\KernelTestCase;
+use SR\WonkaBundle\Test\KernelTestCase;
 use SR\WonkaBundle\Utility\Config\ConfigContainer;
 
 class ConfigContainerTest extends KernelTestCase
@@ -22,11 +21,11 @@ class ConfigContainerTest extends KernelTestCase
      */
     protected $config;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
-        $this->config = new ConfigContainer($this->container);
+        $this->config = new ConfigContainer($this->getContainer());
     }
 
     public function testHasParameter()

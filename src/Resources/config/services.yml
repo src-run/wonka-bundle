@@ -18,17 +18,17 @@ services :
         alias : s.wonka.invokable_container_value_resolver
 
     s.wonka.reflection_analyser :
-        class : %s.wonka.reflection_analyser.class%
+        class : "%s.wonka.reflection_analyser.class%"
         calls :
             - [ unsetReflectionClass ]
 
     s.wonka.invokable_logger :
-        class     : %s.wonka.invokable_logger.class%
+        class     : "%s.wonka.invokable_logger.class%"
         arguments :
             - '@logger'
 
     s.wonka.invokable_container_value_resolver :
-        class : %s.wonka.invokable_container_value_resolver.class%
+        class : "%s.wonka.invokable_container_value_resolver.class%"
         calls :
             - [ setContainer, [ '@service_container' ] ]
 

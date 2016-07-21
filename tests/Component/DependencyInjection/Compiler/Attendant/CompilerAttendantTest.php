@@ -12,15 +12,15 @@
 
 namespace SR\WonkaBundle\Tests\Component\DependencyInjection\Compiler\Attendant;
 
-use SR\WonkaBundle\Tests\Component\DependencyInjection\Compiler\Fixture\FixtureCompilerAttendant;
-use SR\WonkaBundle\Utility\TestCase\WonkaTestCase;
+use SR\WonkaBundle\Test\KernelTestCase;
+use SR\WonkaBundle\Tests\Component\DependencyInjection\Compiler\Fixtures\FixtureCompilerAttendant;
 
 /**
  * Class CompilerAttendantTest.
  */
-class CompilerAttendantTest extends WonkaTestCase
+class CompilerAttendantTest extends KernelTestCase
 {
-    public function test_can_determine_type_short()
+    public function testCanDetermineTypeShort()
     {
         $a = new FixtureCompilerAttendant();
         $expected = 'FixtureCompilerAttendant';
@@ -30,10 +30,10 @@ class CompilerAttendantTest extends WonkaTestCase
         self::assertNotEquals($expected, $a->getType(true));
     }
 
-    public function test_can_determine_type_long()
+    public function testCanDetermineTypeLong()
     {
         $a = new FixtureCompilerAttendant();
-        $expected = 'SR\WonkaBundle\Tests\Component\DependencyInjection\Compiler\Fixture\FixtureCompilerAttendant';
+        $expected = 'SR\WonkaBundle\Tests\Component\DependencyInjection\Compiler\Fixtures\FixtureCompilerAttendant';
 
         self::assertNotEquals($expected, $a->getType());
         self::assertNotEquals($expected, $a->getType(false));

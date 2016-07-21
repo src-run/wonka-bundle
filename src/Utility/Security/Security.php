@@ -12,7 +12,6 @@
 
 namespace SR\WonkaBundle\Utility\Security;
 
-use SR\Utility\EngineInspect;
 use SR\Exception\RuntimeException;
 
 /**
@@ -86,16 +85,7 @@ class Security
     {
         $crackDictionary = null;
 
-        if (false !== ($crackEnabled = EngineInspect::extensionLoaded('crack'))) {
-            $crackDictionary = crack_opendict(self::PASSWORD_CRACK_DICT);
-        }
-
         try {
-            if ($crackEnabled && true !== crack_check($password, $username, '', $crackDictionary)) {
-                throw RuntimeException::create()
-                    ->setMessage('Password is not secure: %s.', crack_getlastmessage());
-            }
-
             if (!preg_match(self::PASSWORD_SECURE_REGEX, $password)) {
                 throw RuntimeException::create()
                     ->setMessage('Password must meet this requirement: %s.', self::PASSWORD_SECURE_REGEX);
@@ -106,10 +96,6 @@ class Security
             }
 
             return false;
-        } finally {
-            if ($crackEnabled) {
-                crack_closedict($crackDictionary);
-            }
         }
 
         return true;

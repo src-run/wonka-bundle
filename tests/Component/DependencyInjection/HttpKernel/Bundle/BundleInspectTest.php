@@ -13,11 +13,12 @@
 namespace SR\WonkaBundle\Tests\Component\HttpKernel\Bundle;
 
 use SR\WonkaBundle\Component\HttpKernel\Bundle\BundleInspect;
+use SR\WonkaBundle\Test\TestCase;
 
 /**
  * Class BundleInspectTest.
  */
-class BundleInspectTest extends \PHPUnit_Framework_TestCase
+class BundleInspectTest extends TestCase
 {
     public function testGetContextFromNamespace()
     {

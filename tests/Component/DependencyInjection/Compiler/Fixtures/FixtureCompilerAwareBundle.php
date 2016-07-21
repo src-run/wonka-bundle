@@ -10,7 +10,7 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\WonkaBundle\Tests\Component\DependencyInjection\Compiler\Fixture;
+namespace SR\WonkaBundle\Tests\Component\DependencyInjection\Compiler\Fixtures;
 
 use SR\WonkaBundle\Component\DependencyInjection\Compiler\Pass\AbstractCompilerPass;
 
