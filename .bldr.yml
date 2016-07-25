@@ -29,7 +29,7 @@ package :
         - timezone
       make :
         - igbinary
-    env :
+    sys :
       prep :
         - composer-download
       post : [ ]
