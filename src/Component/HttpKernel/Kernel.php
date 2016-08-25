@@ -52,6 +52,14 @@ class Kernel extends \Symfony\Component\HttpKernel\Kernel
     }
 
     /**
+     * Clear definitions variable.
+     */
+    final protected static function clearDefinitions()
+    {
+        static::$definitions = [];
+    }
+
+    /**
      * @param string $fqcn
      *
      * @return KernelDefinition
@@ -81,6 +89,7 @@ class Kernel extends \Symfony\Component\HttpKernel\Kernel
      */
     final public function registerBundles()
     {
+        static::clearDefinitions();
         static::setupDefinitions();
 
         return array_map(function (KernelDefinition $definition) {

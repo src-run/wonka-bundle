@@ -17,13 +17,18 @@ use SR\WonkaBundle\Component\HttpKernel\Kernel;
  */
 class AppKernel extends Kernel
 {
-    public function setup()
+    /**
+     * {@inherit-doc}
+     */
+    static public function setupDefinitions()
     {
-        $this->register('\Symfony\Bundle\MonologBundle\MonologBundle');
-        $this->register('\Symfony\Bundle\FrameworkBundle\FrameworkBundle');
-        $this->register('\Symfony\Bundle\SecurityBundle\SecurityBundle');
-        $this->register('\SR\WonkaBundle\WonkaBundle');
-        $this->register('\Symfony\Bundle\DebugBundle\DebugBundle', 'dev', 'test');
+        static::register(\Symfony\Bundle\MonologBundle\MonologBundle::class);
+        static::register(\Symfony\Bundle\FrameworkBundle\FrameworkBundle::class);
+        static::register(\Symfony\Bundle\SecurityBundle\SecurityBundle::class);
+        static::register(\SR\WonkaBundle\WonkaBundle::class);
+
+        static::register(\Symfony\Bundle\DebugBundle\DebugBundle::class)
+            ->environments(self::ENV_DEV, self::ENV_TEST);
     }
 }
 
