@@ -1,43 +1,16 @@
----
-
-package :
-  schema_version : 2.0
-
-  org  : src-run
-  name : wonka-bundle
-  type : bundle
-  srcs : [ "src" ]
-
-  description : |
-    "a collection of classes and interfaces aimed at facilitating Symfony bundle's,"
-    "including helpers for advanced bundle configuration, kernel compiler passes, and more"
-
-  remotes :
-    - { name : origin, url : "git@github.com:src-run/wonka-bundle.git" }
-    - { name : gitlab, url : "git@gitlab.com:src-run/wonka-bundle.git" }
-
-  symfony :
-    console : bin/wonka
-
-  builder :
-    php :
-      test :
-        - { type : zend, version : 5.6 }
-        - { type : zend, version : 7.0 }
-        - { type : hhvm, version : ~, allowed_failure : true }
-      conf :
-        - timezone
-      make :
-        - igbinary
-    sys :
-      prep :
-        - composer-download
-      post : [ ]
-    app :
-      prep :
-        - composer-install
-      post :
-        - report-send-coveralls
-        - report-send-codacy
-
-...
+api_branch : origin/master
+api_parser : ~
+api_cfgmod : clone
+api_runner : ~
+api_paths  : src
+env_make   : ~
+env_prep   : get-composer
+env_post   : ci-coveralls,ci-codacy
+php_conf   : timezone
+php_exts   : igbinary
+app_prep   : dep-composer
+app_post   : ~
+app_path   : ~
+pkg_name   : wonka-bundle
+pkg_desc   : "a collection of classes and interfaces aimed at facilitating Symfony bundle's, including helpers for advanced bundle configuration, kernel compiler passes, and more"
+pkg_bndl   : false

@@ -22,20 +22,11 @@ services :
   - mysql
   - memcached
 
-cache :
-  directories :
-    - $HOME/.composer/cache
-
-notifications :
-    on_success : never
-    on_failure : always
-
 install :
   - bash .bldr/bldr -b up-env -q
   - bash .bldr/bldr -b up-app -q
 
-script :
-  - bin/phpunit -vvv
+script : bin/phpunit -vvv
 
 after_script :
   - bash .bldr/bldr -b down-app -q

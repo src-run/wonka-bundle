@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.5/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/5.0/phpunit.xsd"
          backupGlobals="true"
          colors="true"
          convertErrorsToExceptions="true"
@@ -19,6 +19,9 @@
     <filter>
         <whitelist>
             <directory>src</directory>
+            <exclude>
+                <directory>./*/Resources/</directory>
+            </exclude>
         </whitelist>
     </filter>
 
@@ -30,28 +33,16 @@
     </logging>
 
     <php>
-        <ini name="error_reporting"
-             value="-1"/>
-        <ini name="intl.default_locale"
-             value="en"/>
-        <ini name="intl.error_level"
-             value="0"/>
-        <ini name="memory_limit"
-             value="-1"/>
-
-        <server name="KERNEL_DIR"
-                value="./tests/app"/>
-        <server name="SYMFONY__DATABASE_DRIVER"
-                value="pdo_mysql"/>
-        <server name="SYMFONY__DATABASE_HOST"
-                value="127.0.0.1"/>
-        <server name="SYMFONY__DATABASE_PORT"
-                value="3306"/>
-        <server name="SYMFONY__DATABASE_NAME"
-                value="phpunit_wonka_bundle"/>
-        <server name="SYMFONY__DATABASE_USER"
-                value="root"/>
-        <server name="SYMFONY__DATABASE_PASSWORD"
-                value=""/>
+        <server name="KERNEL_DIR" value="./tests/app" />
+        <server name="SYMFONY__DATABASE_DRIVER" value="pdo_mysql" />
+        <server name="SYMFONY__DATABASE_HOST" value="127.0.0.1" />
+        <server name="SYMFONY__DATABASE_PORT" value="3306" />
+        <server name="SYMFONY__DATABASE_NAME" value="Test_SrcRunWonkaBundle" />
+        <server name="SYMFONY__DATABASE_USER" value="root" />
+        <server name="SYMFONY__DATABASE_PASSWORD" value="" />
+        <ini name="error_reporting" value="-1" />
+        <ini name="intl.default_locale" value="en" />
+        <ini name="intl.error_level" value="0" />
+        <ini name="memory_limit" value="-1" />
     </php>
 </phpunit>
