@@ -170,7 +170,7 @@ class Extension extends BaseExtension implements ContainerAwareInterface
      */
     final protected function isEnabled(array $configSet = null)
     {
-        return getArrayElement('enabled', getFirstArrayElement($configSet));
+        return isset($configSet[0]) && isset($configSet[0]['enabled']) ? $configSet[0]['enabled'] : false;
     }
 
     /**

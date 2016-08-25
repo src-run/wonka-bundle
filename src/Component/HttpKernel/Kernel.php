@@ -12,72 +12,53 @@
 
 namespace SR\WonkaBundle\Component\HttpKernel;
 
-use Symfony\Component\HttpKernel\Kernel as BaseKernel;
+use SR\Exception\InvalidArgumentException;
+use SR\WonkaBundle\Component\HttpKernel\Bundle\InstanceDefinition;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
 /**
  * Class Kernel.
  */
-class Kernel extends BaseKernel
+class Kernel extends \Symfony\Component\HttpKernel\Kernel
 {
     /**
-     * @var array[]
+     * @var InstanceDefinition[]
      */
-    protected $enviornmentRegistrations;
+    protected $bundleDefinitions = [];
 
     /**
      * @return $this
      */
-    public function clear()
+    public function clearRegistrations()
     {
-        $this->enviornmentRegistrations = ['all' => []];
+        $this->bundleDefinitions = [];
 
         return $this;
     }
 
     /**
-     * @param string   $qualifiedName
-     * @param string[] $enviornments
+     * @param string   $fqcn
+     * @param string[] $environments
      *
-     * @return $this
+     * @return InstanceDefinition
      */
-    final protected function register($qualifiedName, ...$enviornments)
+    final protected function register($fqcn)
     {
-        $enviornments = count($enviornments) === 0 ? ['all'] : $enviornments;
+        $this->bundleDefinitions[] = $definition = InstanceDefinition::create($fqcn);
 
-        if (substr($qualifiedName, 0, 1) !== '\\') {
-            $qualifiedName = '\\'.$qualifiedName;
-        }
-
-        foreach ($enviornments as $e) {
-            if (!array_key_exists($e, $this->enviornmentRegistrations)) {
-                $this->enviornmentRegistrations[$e] = [];
-            }
-
-            $this->enviornmentRegistrations[$e][] = $qualifiedName;
-        }
-
-        return $this;
+        return $definition;
     }
 
     /**
-     * @return array[]
+     * @param string $environment
+     *
+     * @return InstanceDefinition[]
      */
-    final protected function resolveBundles()
+    final protected function filterBundles($environment)
     {
-        $unresolved = array_unique($this->enviornmentRegistrations['all']);
-        $resolved = [];
-        $enviornment = $this->getEnvironment();
-
-        if ($enviornment !== 'prod' && array_key_exists($enviornment, $this->enviornmentRegistrations)) {
-            $unresolved = array_unique(array_merge($unresolved, $this->enviornmentRegistrations[$enviornment]));
-        }
-
-        foreach ($unresolved as $bundle) {
-            $resolved[] = new $bundle();
-        }
-
-        return $resolved;
+        return array_filter($this->bundleDefinitions, function (InstanceDefinition $definition) use ($environment) {
+            return $definition->hasEnvironment($environment);
+        });
     }
 
     /**
@@ -85,10 +66,9 @@ class Kernel extends BaseKernel
      */
     final public function registerBundles()
     {
-        $this->clear();
-        $this->setup();
-
-        return $this->resolveBundles();
+        return array_map(function (InstanceDefinition $definition) {
+            return $definition->getInstance();
+        }, $this->filterBundles($this->getEnvironment()));
     }
 
     /**
