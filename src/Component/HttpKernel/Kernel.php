@@ -4,7 +4,6 @@
  * This file is part of the `src-run/wonka-bundle` project.
  *
  * (c) Rob Frawley 2nd <rmf@src.run>
- * (c) Scribe Inc      <scr@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
@@ -12,9 +11,8 @@
 
 namespace SR\WonkaBundle\Component\HttpKernel;
 
-use SR\Exception\InvalidArgumentException;
-use SR\WonkaBundle\Component\HttpKernel\Bundle\InstanceDefinition;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**
  * Class Kernel.
@@ -22,29 +20,46 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 class Kernel extends \Symfony\Component\HttpKernel\Kernel
 {
     /**
-     * @var InstanceDefinition[]
+     * @var string
      */
-    protected $bundleDefinitions = [];
+    const ENV_PROD = KernelDefinition::ENV_PROD;
 
     /**
-     * @return $this
+     * @var string
      */
-    public function clearRegistrations()
-    {
-        $this->bundleDefinitions = [];
+    const ENV_DEV = KernelDefinition::ENV_DEV;
 
-        return $this;
+    /**
+     * @var string
+     */
+    const ENV_TEST = KernelDefinition::ENV_TEST;
+
+    /**
+     * @var string[]
+     */
+    const ENV_ALL = KernelDefinition::ENV_ALL;
+
+    /**
+     * @var KernelDefinition[]
+     */
+    protected static $definitions = [];
+
+    /**
+     * Overwrite in your own class and call {@register()} to add bundles.
+     */
+    protected static function setupDefinitions()
+    {
     }
 
     /**
-     * @param string   $fqcn
-     * @param string[] $environments
+     * @param string $fqcn
      *
-     * @return InstanceDefinition
+     * @return KernelDefinition
      */
-    final protected function register($fqcn)
+    final protected static function register($fqcn)
     {
-        $this->bundleDefinitions[] = $definition = InstanceDefinition::create($fqcn);
+        static::$definitions[] = $definition = KernelDefinition::create($fqcn);
+        $definition->environments(self::ENV_ALL);
 
         return $definition;
     }
@@ -52,21 +67,23 @@ class Kernel extends \Symfony\Component\HttpKernel\Kernel
     /**
      * @param string $environment
      *
-     * @return InstanceDefinition[]
+     * @return KernelDefinition[]
      */
     final protected function filterBundles($environment)
     {
-        return array_filter($this->bundleDefinitions, function (InstanceDefinition $definition) use ($environment) {
+        return array_filter(static::$definitions, function (KernelDefinition $definition) use ($environment) {
             return $definition->hasEnvironment($environment);
         });
     }
 
     /**
-     * @return object[]
+     * @return BundleInterface[]
      */
     final public function registerBundles()
     {
-        return array_map(function (InstanceDefinition $definition) {
+        static::setupDefinitions();
+
+        return array_map(function (KernelDefinition $definition) {
             return $definition->getInstance();
         }, $this->filterBundles($this->getEnvironment()));
     }

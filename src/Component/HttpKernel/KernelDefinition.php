@@ -4,21 +4,21 @@
  * This file is part of the `src-run/wonka-bundle` project.
  *
  * (c) Rob Frawley 2nd <rmf@src.run>
- * (c) Scribe Inc      <scr@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-namespace SR\WonkaBundle\Component\HttpKernel\Bundle;
+namespace SR\WonkaBundle\Component\HttpKernel;
+
 use SR\Exception\InvalidArgumentException;
 use SR\Exception\RuntimeException;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**
- * Class InstanceDefinition.
+ * Class KernelDefinition.
  */
-class InstanceDefinition
+class KernelDefinition
 {
     /**
      * @var string
@@ -28,7 +28,7 @@ class InstanceDefinition
     /**
      * @var string
      */
-    const ENV_DEV  = 'dev';
+    const ENV_DEV = 'dev';
 
     /**
      * @var string
@@ -38,7 +38,7 @@ class InstanceDefinition
     /**
      * @var string
      */
-    const ENV_ALL  = [self::ENV_PROD, self::ENV_DEV, self::ENV_TEST];
+    const ENV_ALL = [self::ENV_PROD, self::ENV_DEV, self::ENV_TEST];
 
     /**
      * @var string
@@ -48,12 +48,12 @@ class InstanceDefinition
     /**
      * @var string[]
      */
-    private $environments;
+    private $environments = [];
 
     /**
      * @var mixed[]
      */
-    private $arguments;
+    private $arguments = [];
 
     /**
      * @param string $fqcn
@@ -76,7 +76,7 @@ class InstanceDefinition
      *
      * @return static
      */
-    static public function create($fqcn)
+    public static function create($fqcn)
     {
         return new static($fqcn);
     }
@@ -96,7 +96,7 @@ class InstanceDefinition
             }
         }
 
-        $this->environments = array_unique(array_merge($this->environments, $flattened));
+        $this->environments = array_unique($flattened);
 
         return $this;
     }
