@@ -72,8 +72,7 @@ trait ContainerAwareTrait
         }
 
         throw InvalidContainerParameterException::create()
-            ->setMessage('The container parameter requested (%s) does not exist.')
-            ->with($parameter);
+            ->setMessage('The container parameter requested (%s) does not exist.', $parameter);
     }
 
     /**
@@ -104,8 +103,7 @@ trait ContainerAwareTrait
         }
 
         throw InvalidContainerParameterException::create()
-            ->setMessage('The container service requested (%s) does not exist.')
-            ->with($service);
+            ->setMessage('The container service requested (%s) does not exist.', $service);
     }
 
     /**

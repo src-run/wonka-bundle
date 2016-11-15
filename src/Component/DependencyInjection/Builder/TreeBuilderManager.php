@@ -12,7 +12,7 @@
 
 namespace SR\WonkaBundle\Component\DependencyInjection\Builder;
 
-use SR\Exception\RuntimeException;
+use SR\Exception\Runtime\RuntimeException;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 
 /**
@@ -35,6 +35,8 @@ class TreeBuilderManager extends AbstractBuilderManager
     public function setTreeBuilder(TreeBuilder $treeBuilder)
     {
         $this->treeBuilder = $treeBuilder;
+
+        return $this;
     }
 
     /**

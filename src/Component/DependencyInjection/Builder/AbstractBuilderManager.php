@@ -43,6 +43,8 @@ abstract class AbstractBuilderManager
     public function setNodeDefinition(NodeDefinition $nodeDefinition)
     {
         $this->nodeDefinition = $nodeDefinition;
+
+        return $this;
     }
 
     /**

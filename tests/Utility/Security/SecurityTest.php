@@ -18,7 +18,7 @@ class SecurityTest extends KernelTestCase
 {
     public function testGetRandomHash()
     {
-        $this->setExpectedException('SR\Exception\RuntimeException');
+        $this->setExpectedException('SR\Exception\Runtime\RuntimeException');
 
         Security::getRandomHash('hash-not-valid');
     }
@@ -32,7 +32,7 @@ class SecurityTest extends KernelTestCase
 
     public function testRandomPasswordExceptionTooShort()
     {
-        $this->setExpectedException('SR\Exception\RuntimeException');
+        $this->setExpectedException('SR\Exception\Runtime\RuntimeException');
         Security::getRandomPassword(7);
     }
 
@@ -61,7 +61,7 @@ class SecurityTest extends KernelTestCase
 
     public function testIsSecurePasswordException()
     {
-        $this->setExpectedException('SR\Exception\RuntimeException');
+        $this->setExpectedException('SR\Exception\Runtime\RuntimeException');
         Security::isSecurePassword('nope', '', true);
     }
 
@@ -97,7 +97,7 @@ class SecurityTest extends KernelTestCase
 
     public function testRandomBytesExceptionInvalidLength()
     {
-        $this->setExpectedException('SR\Exception\RuntimeException');
+        $this->setExpectedException('SR\Exception\Runtime\RuntimeException');
 
         Security::getRandomBytes(0);
     }

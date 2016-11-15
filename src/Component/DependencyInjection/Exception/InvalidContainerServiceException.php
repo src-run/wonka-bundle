@@ -12,7 +12,7 @@
 
 namespace SR\WonkaBundle\Component\DependencyInjection\Exception;
 
-use SR\Exception\LogicException;
+use SR\Exception\Logic\LogicException;
 
 /**
  * Class InvalidContainerServiceException.

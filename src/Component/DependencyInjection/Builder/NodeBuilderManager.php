@@ -12,7 +12,7 @@
 
 namespace SR\WonkaBundle\Component\DependencyInjection\Builder;
 
-use SR\Exception\RuntimeException;
+use SR\Exception\Runtime\RuntimeException;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
@@ -42,6 +42,8 @@ class NodeBuilderManager extends AbstractBuilderManager
     public function setNodeBuilder(NodeBuilder $nodeBuilder)
     {
         $this->nodeBuilder = $nodeBuilder;
+
+        return $this;
     }
 
     /**
@@ -70,8 +72,7 @@ class NodeBuilderManager extends AbstractBuilderManager
 
         if (!method_exists($this->nodeBuilder, $method)) {
             throw RuntimeException::create()
-                ->setMessage('Invalid node type "%s" provided when asking for new builder.')
-                ->with($method);
+                ->setMessage('Invalid node type "%s" provided when asking for new builder.', $method);
         }
 
         $this->setNodeDefinition(call_user_func([$this->nodeBuilder, $method], $name));

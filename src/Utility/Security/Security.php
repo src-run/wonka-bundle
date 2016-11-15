@@ -12,7 +12,7 @@
 
 namespace SR\WonkaBundle\Utility\Security;
 
-use SR\Exception\RuntimeException;
+use SR\Exception\Runtime\RuntimeException;
 
 /**
  * Class Security.
@@ -65,8 +65,7 @@ class Security
     {
         if (!in_array($algorithm, hash_algos())) {
             throw RuntimeException::create()
-                ->setMessage('Invalid hash algorithm "%s".')
-                ->with($algorithm);
+                ->setMessage('Invalid hash algorithm "%s".', $algorithm);
         }
 
         return hash($algorithm, self::getRandomBytes($entropy), $raw);

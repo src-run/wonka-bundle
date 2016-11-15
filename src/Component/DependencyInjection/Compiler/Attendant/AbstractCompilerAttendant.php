@@ -68,7 +68,7 @@ abstract class AbstractCompilerAttendant implements CompilerAttendantInterface
      */
     public function getType($qualified = false)
     {
-        return Inspect::thisInstance($this)->name($qualified);
+        return Inspect::useInstance($this)->name($qualified);
     }
 }
 

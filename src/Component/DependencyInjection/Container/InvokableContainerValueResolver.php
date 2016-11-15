@@ -63,7 +63,7 @@ class InvokableContainerValueResolver implements InvokableContainerValueResolver
     {
         $parameter = preg_replace('/(?:^[%])|(?:[%]$)/', '', $parameter);
 
-        $this->getContainerParameter($parameter);
+        return $this->getContainerParameter($parameter);
     }
 
     /**
@@ -77,7 +77,7 @@ class InvokableContainerValueResolver implements InvokableContainerValueResolver
     {
         $service = preg_replace('/(?:^[@])/', '', $service);
 
-        $this->getContainerService($service);
+        return $this->getContainerService($service);
     }
 }
 

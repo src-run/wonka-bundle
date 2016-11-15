@@ -11,9 +11,8 @@
  */
 
 namespace SR\WonkaBundle\Component\HttpKernel\Bundle;
-
-use SR\Utility\ClassInspect;
-use SR\Utility\StringTransform;
+use SR\Util\Info\ClassInfo;
+use SR\Util\Transform\StringTransform;
 
 /**
  * Class BundleInspect.
@@ -66,11 +65,12 @@ class BundleInspect
         $sections = self::getNamespaceSections(
             self::normalizeSequentialUpperChars($namespace));
 
-        if (ClassInspect::isClass($namespace)) {
+        if (ClassInfo::isClass($namespace)) {
             array_pop($sections);
         }
 
-        $root = StringTransform::pascalToSnakeCase(array_shift($sections));
+        $transformer = new StringTransform(array_shift($sections));
+        $root = (string) $transformer->pascalToSnakeCase();
 
         return [$root, $sections];
     }
@@ -86,7 +86,8 @@ class BundleInspect
         $sections = [];
 
         for ($i = 0; $i < count($from); ++$i) {
-            $sections[] = StringTransform::pascalToSnakeCase($from[$i]);
+            $transformer = new StringTransform($from[$i]);
+            $sections[] = (string) $transformer->pascalToSnakeCase();
 
             if (1 === preg_match('{Bundle$}', $from[$i])) {
                 break;

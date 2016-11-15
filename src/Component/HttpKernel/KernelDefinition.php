@@ -11,8 +11,8 @@
 
 namespace SR\WonkaBundle\Component\HttpKernel;
 
-use SR\Exception\InvalidArgumentException;
-use SR\Exception\RuntimeException;
+use SR\Exception\Logic\InvalidArgumentException;
+use SR\Exception\Runtime\RuntimeException;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**

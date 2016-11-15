@@ -11,7 +11,7 @@
 
 namespace SR\WonkaBundle\Twig;
 
-use SR\Utility\ClassInspect;
+use SR\Util\Info\ClassInfo;
 use SR\WonkaBundle\Twig\Definition\AbstractTwigDefinition;
 use SR\WonkaBundle\Twig\Definition\TwigOptionsDefinition;
 use SR\WonkaBundle\Twig\Definition\TwigFilterDefinition;
@@ -104,7 +104,7 @@ class TwigExtension extends \Twig_Extension implements TwigExtensionInterface
      */
     final public function getName()
     {
-        return strtolower('twig_extension_'.preg_replace('{twigextension$}i', '', ClassInspect::getNameShort(static::class)));
+        return strtolower('twig_extension_'.preg_replace('{twigextension$}i', '', ClassInfo::getNameShort(static::class)));
     }
 
     /**
@@ -233,7 +233,7 @@ class TwigExtension extends \Twig_Extension implements TwigExtensionInterface
     final private function getNativeSet(array $items)
     {
         return array_map(function (AbstractTwigDefinition $f) {
-            $f->getOptions()->merge($this->options, false);
+            $f->getOptions()->merge($this->options);
 
             return $f->getNativeInstance();
         }, $items);

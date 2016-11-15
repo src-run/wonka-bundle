@@ -12,8 +12,8 @@
 
 namespace SR\WonkaBundle\Component\DependencyInjection;
 
-use SR\Exception\RuntimeException;
-use SR\Utility\ArrayInspect;
+use SR\Exception\Runtime\RuntimeException;
+use SR\Util\Info\ArrayInfo;
 use SR\WonkaBundle\Component\DependencyInjection\Container\ContainerAwareInterface;
 use SR\WonkaBundle\Component\DependencyInjection\Container\ContainerAwareTrait;
 use SR\WonkaBundle\Component\DependencyInjection\Loader\XmlFileLoader;
@@ -283,8 +283,7 @@ class Extension extends BaseExtension implements ContainerAwareInterface
         }
 
         throw RuntimeException::create()
-            ->setMessage('No available service file loader for %s file with %s extension type.')
-            ->with($file, pathinfo($file, PATHINFO_EXTENSION));
+            ->setMessage('No available service file loader for %s file with %s extension type.', $file, pathinfo($file, PATHINFO_EXTENSION));
     }
 
     /**
@@ -334,7 +333,7 @@ class Extension extends BaseExtension implements ContainerAwareInterface
             return $this->handleConfigsToParameterWhenArrayHash($prefixedId, $value, '_list');
         }
 
-        if (false === ArrayInspect::isAssociative($value, false)) {
+        if (false === ArrayInfo::isAssociative($value)) {
             return $this->handleConfigsToParameterWhenArrayInt($prefixedId, $value);
         }
 
@@ -468,8 +467,7 @@ class Extension extends BaseExtension implements ContainerAwareInterface
 
         if (false === stripos($validFirstChar, $resolvedIndexValue[0])) {
             throw RuntimeException::create()
-                ->setMessage('DI-auto config->parameter ids must begin with a letter: the index "%s" is invalid.')
-                ->with($resolvedIndexValue);
+                ->setMessage('DI-auto config->parameter ids must begin with a letter: the index "%s" is invalid.', $resolvedIndexValue);
         }
 
         return (string) $resolvedIndexValue;
