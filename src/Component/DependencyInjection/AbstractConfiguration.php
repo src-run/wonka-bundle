@@ -17,6 +17,7 @@ use SR\WonkaBundle\Component\HttpKernel\Bundle\BundleInspect;
 use SR\WonkaBundle\Component\DependencyInjection\Builder\TreeBuilderManager;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
@@ -40,7 +41,7 @@ class AbstractConfiguration implements ConfigurationInterface
     protected $nodeBuilderSet = [];
 
     /**
-     * @return NodeDefinition
+     * @return TreeBuilder
      */
     public function getConfigTreeBuilder()
     {
