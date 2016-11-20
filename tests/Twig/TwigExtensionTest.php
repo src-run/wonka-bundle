@@ -11,6 +11,7 @@
 
 namespace SR\WonkaBundle\Tests\Twig;
 
+use SR\Reflection\Inspect;
 use SR\WonkaBundle\Test\KernelTestCase;
 use SR\WonkaBundle\Twig\Definition\TwigFilterDefinition;
 use SR\WonkaBundle\Twig\Definition\TwigFunctionDefinition;
@@ -88,7 +89,11 @@ class TwigExtensionTest extends KernelTestCase
         $extension = new TwigExtension();
         $extension->addFunction('test', $callable);
 
-        $this->assertInstanceOf('\Twig_Function', $extension->getFunctions()[0]);
+        if (Inspect::useClass('\Twig_Function')->isAbstract()) {
+            $this->assertInstanceOf('\Twig_SimpleFunction', $extension->getFunctions()[0]);
+        } else {
+            $this->assertInstanceOf('\Twig_Function', $extension->getFunctions()[0]);
+        }
 
         $extension->clearFunctions();
         $this->assertCount(0, $extension->getFunctions());
@@ -103,7 +108,11 @@ class TwigExtensionTest extends KernelTestCase
         $extension = new TwigExtension();
         $extension->addFilter('test', $callable);
 
-        $this->assertInstanceOf('\Twig_Filter', $extension->getFilters()[0]);
+        if (Inspect::useClass('\Twig_Filter')->isAbstract()) {
+            $this->assertInstanceOf('\Twig_SimpleFilter', $extension->getFilters()[0]);
+        } else {
+            $this->assertInstanceOf('\Twig_Filter', $extension->getFilters()[0]);
+        }
 
         $extension->clearFilters();
         $this->assertCount(0, $extension->getFilters());

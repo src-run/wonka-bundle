@@ -11,16 +11,22 @@
 
 namespace SR\WonkaBundle\Twig\Definition;
 
+use SR\Reflection\Inspect;
+
 /**
  * Class TwigFunctionDefinition.
  */
 final class TwigFunctionDefinition extends AbstractTwigDefinition
 {
     /**
-     * @return \Twig_Function
+     * @return \Twig_Function|\Twig_SimpleFunction
      */
     public function getNativeInstance()
     {
+        if (Inspect::useClass('\Twig_Function')->isAbstract()) {
+            return new \Twig_SimpleFunction($this->name, $this->callable, $this->options->toArray());
+        }
+
         return new \Twig_Function($this->name, $this->callable, $this->options->toArray());
     }
 }

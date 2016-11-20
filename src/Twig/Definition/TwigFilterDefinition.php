@@ -11,16 +11,22 @@
 
 namespace SR\WonkaBundle\Twig\Definition;
 
+use SR\Reflection\Inspect;
+
 /**
  * Class TwigFilterDefinition.
  */
 final class TwigFilterDefinition extends AbstractTwigDefinition
 {
     /**
-     * @return \Twig_Filter
+     * @return \Twig_Filter|\Twig_SimpleFilter
      */
     public function getNativeInstance()
     {
+        if (Inspect::useClass('\Twig_Filter')->isAbstract()) {
+            return new \Twig_SimpleFilter($this->name, $this->callable, $this->options->toArray());
+        }
+
         return new \Twig_Filter($this->name, $this->callable, $this->options->toArray());
     }
 }
